@@ -4,8 +4,3 @@
 # But not these files...
 !.gitignore
 !atp_matches_201*
-
-!modified/Readme.md
-
-
-
