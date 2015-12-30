@@ -14,6 +14,10 @@ vignettes/*.pdf
 
 
 
+# RData files
+*.RData
 
+# Rproj files
+*.Rproj
 
 Help/
