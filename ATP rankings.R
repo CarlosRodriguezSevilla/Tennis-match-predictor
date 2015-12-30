@@ -25,9 +25,10 @@ str(players)
 
 
 
-# Add name to current ranking
+
 # Caution: player_id repeated cases in rankings_current
 
+# Paste and save full name to the players dataframe
 players$full_name <- paste(players$first_name, players$last_name, sep=" ")
 head(players)
 
@@ -35,6 +36,7 @@ head(players)
 players <- players[-which(duplicated(players$player_id)),]
 head(players)
 
+# Add full name to current ranking
 rankings_current$full_name <- left_join(
   rankings_current, 
   players,
