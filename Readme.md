@@ -1,4 +1,5 @@
 # Tennis Match Predictor
+Let's try to predict whether if the winner of a given tennis match is the player with the better ATP ranking.
 
 ##Next steps
 - Remove insignificant columns from the predictors dataframe (names, ids, etc)
