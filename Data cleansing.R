@@ -34,8 +34,9 @@ for (i in 1:length(filenames))
   }
     
 }
-rm(i, filenames)
+rm(i, filenames, dataset)
 
+# matches$draw_size <- as.factor(matches$draw_size)
 
 
 set.seed(47)
@@ -54,8 +55,8 @@ for(i in randomIndex){
 }
 rm(i, winner_cols, loser_cols, randomIndex)
 
-colnames(matches) <- gsub("winner", "1st_player", colnames(matches))
-colnames(matches) <- gsub("loser", "2nd_player", colnames(matches))
+colnames(matches) <- gsub("winner", "first_player", colnames(matches))
+colnames(matches) <- gsub("loser", "second_player", colnames(matches))
 
 
 
