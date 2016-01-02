@@ -1,4 +1,6 @@
 
+rm(list=ls()) # Clear workspace
+
 library(dplyr)
 library(tidyr)
 
@@ -36,8 +38,6 @@ for (i in 1:length(filenames))
 }
 rm(i, filenames, dataset)
 
-# matches$draw_size <- as.factor(matches$draw_size)
-
 
 set.seed(47)
 randomIndex <- sample(x = nrow(matches)
@@ -58,6 +58,16 @@ rm(i, winner_cols, loser_cols, randomIndex)
 colnames(matches) <- gsub("winner", "first_player", colnames(matches))
 colnames(matches) <- gsub("loser", "second_player", colnames(matches))
 
+matches$draw_size          <- as.factor(matches$draw_size)
+matches$first_player_id    <- as.factor(matches$first_player_id)  # Even though it won't be added to the model
+matches$second_player_id   <- as.factor(matches$second_player_id) # Even though it won't be added to the model
+matches$first_player_seed  <- as.factor(matches$first_player_seed)
+matches$second_player_seed <- as.factor(matches$second_player_seed)
+matches$best_of            <- as.factor(matches$best_of)
 
+# Data frame including only those matches where the winner was not the better ranked
+matches_w_not_b_ranked <- matches[matches$w_is_better_ranked == FALSE,]
+
+matches <- matches[,c(1:30,50)]
 
 save(matches, file=paste0(path, "/Matches-clean.RData"))

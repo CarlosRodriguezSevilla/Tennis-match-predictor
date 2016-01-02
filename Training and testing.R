@@ -1,4 +1,6 @@
 
+rm(list=ls()) # Clear workspace
+
 library(dplyr)
 library(tidyr)
 library(kernlab)
@@ -11,14 +13,13 @@ load(paste0(path, "/Matches-clean.RData"))
 
 
 # Sampling
-matches.predictors <- matches[,c(1:30,50)]
-
-trainIndex <- sample(x = nrow(matches.predictors)
-                     , size = nrow(matches.predictors)*0.7
+set.seed(48)
+trainIndex <- sample(x = nrow(matches.pred_and_resp)
+                     , size = nrow(matches.pred_and_resp)*0.7
                      )
 
-train <- matches.predictors[trainIndex,]
-test  <- matches.predictors[-trainIndex,]
+train <- matches.pred_and_resp[trainIndex,]
+test  <- matches.pred_and_resp[-trainIndex,]
 
 rm(trainIndex)
 
