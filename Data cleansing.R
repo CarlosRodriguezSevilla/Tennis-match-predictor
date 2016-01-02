@@ -39,7 +39,7 @@ for (i in 1:length(filenames))
 rm(i, filenames, dataset)
 
 
-set.seed(47)
+set.seed(2)
 randomIndex <- sample(x = nrow(matches)
                       , size = nrow(matches)/2
 )
@@ -66,8 +66,15 @@ matches$second_player_seed <- as.factor(matches$second_player_seed)
 matches$best_of            <- as.factor(matches$best_of)
 
 # Data frame including only those matches where the winner was not the better ranked
-matches_w_not_b_ranked <- matches[matches$w_is_better_ranked == FALSE,]
+# matches_w_not_b_ranked <- matches[matches$w_is_better_ranked == FALSE,]
 
-matches <- matches[,c(1:30,50)]
+matches <- matches[c(
+  "surface",               "draw_size",                  "tourney_level",             "match_num",
+  "first_player_seed",     "first_player_entry",         "first_player_hand",         "first_player_ht",
+  "first_player_age",      "first_player_rank",          "first_player_rank_points",  "second_player_seed",
+  "second_player_entry",   "second_player_hand",         "second_player_ht",          "second_player_age",
+  "second_player_rank",    "second_player_rank_points",  "best_of",                   "round",                    
+  "w_is_better_ranked"
+  )]
 
 save(matches, file=paste0(path, "/Matches-clean.RData"))

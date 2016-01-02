@@ -13,13 +13,13 @@ load(paste0(path, "/Matches-clean.RData"))
 
 
 # Sampling
-set.seed(48)
-trainIndex <- sample(x = nrow(matches.pred_and_resp)
-                     , size = nrow(matches.pred_and_resp)*0.7
+set.seed(2)
+trainIndex <- sample(x = nrow(matches)
+                     , size = nrow(matches)*0.7
                      )
 
-train <- matches.pred_and_resp[trainIndex,]
-test  <- matches.pred_and_resp[-trainIndex,]
+train <- matches[trainIndex,]
+test  <- matches[-trainIndex,]
 
 rm(trainIndex)
 
@@ -67,4 +67,4 @@ N  <- nrow( subset ( resultsDF, ypred == 0 ) )
 TP <- nrow( subset ( resultsDF, ypred == 1 & ytest == 1 ) )
 TN <- nrow( subset ( resultsDF, ypred == 0 & ytest == 0 ) )
 
-table(ypred, ytest$w_is_better_ranked)
+table(PREDICTION = ypred, TRUTH = ytest$w_is_better_ranked)
