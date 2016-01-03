@@ -1,20 +1,7 @@
 # Tennis Match Predictor
 Let's try to predict whether if the winner of a given tennis match is the player with the better ATP ranking.
 
-## Next steps
-- Reshape factor columns with too many levels to fit the models
-- Add more columns (relative effectiveness as server and returner, days since previous match of each player, maybe bio variables like height, etc)
-- Redirect the resulting outputs (graphics, tables, ...) to some specific folder
-
-## Future steps
-- EDA, graphs, etc.
-- Use a decision tree learning algorithm to obtain a human interpretable hypothesis.
-- Principal Component Analysis: convert a set of observations of possibly correlated variables into a set of values of linearly 
-  uncorrelated variables called principal components.
-- Calculate the most significant features, that are likely to have a causal effect on the outcome of the match.
-
 ## Variables
-
 **surface**: Factor w/ 5 levels "Carpet","Clay",..: 2 2 2 2 2 2 2 2 2 2 ...  
 **draw_size**: Factor w/ 11 levels "4","8","9","16",..: 6 6 6 6 6 6 6 6 6 6 ...  
 **tourney_level**: Factor w/ 6 levels "A","D","F","G",..: 1 1 1 1 1 1 1 1 1 1 ...  
@@ -36,6 +23,18 @@ Let's try to predict whether if the winner of a given tennis match is the player
 **best_of**: Factor w/ 2 levels "3","5": 1 1 1 1 1 1 1 1 1 1 ...  
 **round**: Factor w/ 9 levels "BR","F","QF",..: 6 6 6 6 6 6 6 6 6 6 ...  
 **w_is_better_ranked**: Factor w/ 2 levels "FALSE","TRUE": 1 1 2 1 2 2 1 2 2 1 ...
+
+
+## Next steps
+- Reshape factor columns with too many levels to fit the models
+- Add more columns (relative effectiveness as server and returner, days since previous match of each player, maybe bio variables like height, etc)
+- Redirect the resulting outputs (graphics, tables, ...) to some specific folder
+
+## Future steps
+- EDA, graphs, etc.
+- Use a decision tree learning algorithm to obtain a human interpretable hypothesis.
+- Principal Component Analysis: convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables called principal components.
+- Calculate the most significant features, that are likely to have a causal effect on the outcome of the match.
 
 ## Datasets
 - Jeff Sackmann. [Tennis Rankings, Results, and Stats](https://github.com/JeffSackmann)
