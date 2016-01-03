@@ -1,3 +1,5 @@
+Under development!
+
 # Tennis Match Predictor
 Let's try to predict whether if the winner of a given tennis match is the player with the better ATP ranking.
 
@@ -24,6 +26,9 @@ Let's try to predict whether if the winner of a given tennis match is the player
 **round**: Factor w/ 9 levels "BR","F","QF",..: 6 6 6 6 6 6 6 6 6 6 ...  
 **w_is_better_ranked**: Factor w/ 2 levels "FALSE","TRUE": 1 1 2 1 2 2 1 2 2 1 ...
 
+## Learning Models
+**Support vector machine**  https://en.wikipedia.org/wiki/Support_vector_machine
+
 
 ## Next steps
 - Reshape factor columns with too many levels to fit the models
@@ -37,4 +42,7 @@ Let's try to predict whether if the winner of a given tennis match is the player
 
 ## Datasets
 - Jeff Sackmann. [Tennis Rankings, Results, and Stats](https://github.com/JeffSackmann)
+
+## Bibliography
+- Nordhausen, K. (2014), An Introduction to Statistical Learning—with Applications in R by Gareth James, Daniela Witten, Trevor Hastie & Robert Tibshirani. International Statistical Review, 82: 156–157. doi: 10.1111/insr.12051_19
 
