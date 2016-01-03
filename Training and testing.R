@@ -47,12 +47,16 @@ ypredProb <- predict(object = ksvmModel
 head(ypredProb)
 
 
+# Create the "/output" folder if it does not already exists
+dir.create('output', showWarnings = F)
+
 # ROC Curve
 pred <- prediction(ypredProb[,2], na.omit(test)["w_is_better_ranked"])
 perf <- performance(pred, "tpr", "fpr")
+png(filename = "output/ROC Curve.png")
 plot(perf)
 abline(0,1, lty="dotted")
-
+dev.off()
 
 
 # Clasification
