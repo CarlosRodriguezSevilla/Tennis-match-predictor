@@ -28,7 +28,6 @@ Let's try to predict whether if the winner of a given tennis match is the player
 ## Next steps
 - Reshape factor columns with too many levels to fit the models
 - Add more columns (relative effectiveness as server and returner, days since previous match of each player, maybe bio variables like height, etc)
-- Redirect the resulting outputs (graphics, tables, ...) to some specific folder
 
 ## Future steps
 - EDA, graphs, etc.
