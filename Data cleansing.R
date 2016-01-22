@@ -74,12 +74,11 @@ matches$best_of            <- as.factor(matches$best_of)
 # matches_w_not_b_ranked <- matches[matches$w_is_better_ranked == FALSE,]
 
 matches <- matches[c(
-  "surface",               "draw_size",                  "tourney_level",             "match_num",
-  "first_player_seed",     "first_player_entry",         "first_player_hand",         "first_player_ht",
-  "first_player_age",      "first_player_rank",          "first_player_rank_points",  "second_player_seed",
-  "second_player_entry",   "second_player_hand",         "second_player_ht",          "second_player_age",
-  "second_player_rank",    "second_player_rank_points",  "best_of",                   "round",                    
-  "w_is_better_ranked"
-  )]
+  "surface",               "draw_size",                  "tourney_level",           "match_num",
+  "first_player_seed",     "first_player_entry",         "first_player_hand",       "first_player_ht",
+  "first_player_age",      "first_player_rank_points",   "second_player_seed",      "second_player_entry",
+  "second_player_hand",    "second_player_ht",           "second_player_age",       "second_player_rank_points",  
+  "best_of",               "round",                      "w_is_better_ranked"
+)]
 
 save(matches, file=paste0(path, "/Matches-clean.RData"))
