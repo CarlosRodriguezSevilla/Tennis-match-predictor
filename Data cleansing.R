@@ -7,11 +7,13 @@ library(tidyr)
 # Load config file with root path, etc
 source("Config.R")
 
+# Load every filename of datasets
 filenames <- list.files(paste0(path, "/tennis_atp-master"), 
                         pattern="atp_matches_201", 
                         full.names=TRUE
                         )
 
+# Bind all datasets to create a sigle one
 for (i in 1:length(filenames))
 {
   dataset <- read.csv(filenames[i])
@@ -44,6 +46,7 @@ randomIndex <- sample(x = nrow(matches)
                       , size = nrow(matches)/2
 )
 
+# Randomize the position of the winner columns to avoid having them always in the first place.
 for(i in randomIndex){
   
   winner_cols <- matches[i,8:17]
@@ -55,9 +58,11 @@ for(i in randomIndex){
 }
 rm(i, winner_cols, loser_cols, randomIndex)
 
+# Rename column names
 colnames(matches) <- gsub("winner", "first_player", colnames(matches))
 colnames(matches) <- gsub("loser", "second_player", colnames(matches))
 
+# Convert to factor where needed
 matches$draw_size          <- as.factor(matches$draw_size)
 matches$first_player_id    <- as.factor(matches$first_player_id)  # Even though it won't be added to the model
 matches$second_player_id   <- as.factor(matches$second_player_id) # Even though it won't be added to the model
