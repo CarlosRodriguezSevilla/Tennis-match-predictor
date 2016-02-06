@@ -7,11 +7,6 @@ plotModel <- function(name, prediction, model, ytest){
   resultsDF <- data.frame(ypred, ytest)
   performance <- performance(prediction, "tpr", "fpr")
   
-  P  <- nrow( subset ( resultsDF, ypred == 1 ) )
-  N  <- nrow( subset ( resultsDF, ypred == 0 ) )
-  TP <- nrow( subset ( resultsDF, ypred == 1 & ytest == 1 ) )
-  TN <- nrow( subset ( resultsDF, ypred == 0 & ytest == 0 ) )
-  
   tableModel <- table(PREDICTION = ypred, TRUTH = ytest$w_is_better_ranked)
   
   png(filename = paste0("output/", name, ".png"), width = 768, height = 1024)

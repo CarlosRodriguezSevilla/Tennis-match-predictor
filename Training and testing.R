@@ -49,12 +49,12 @@ adaModel <- ada(
 
 # Predictor columns
 ypredProbSVM <- predict(object = svmModel, test, type="probabilities")
-ypredProbADA <- predict(object = adaModel, test, type="prob")
+ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
 
 
 # Prediction objects
 predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_better_ranked"])
-predADA <- prediction(ypredProbADA[,2], test["w_is_better_ranked"])
+predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_better_ranked"])
 
 
 
