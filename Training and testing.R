@@ -101,17 +101,6 @@ ADATable <- table(PREDICTION = ypredADA, TRUTH = ytest$w_is_better_ranked)
 dir.create('output', showWarnings = F)
 
 # Plot
-png(filename = "output/SVM.png", width = 768, height = 1024)
-par(mfrow=c(2, 1), mai=c(0.8,2,2,2)) # mai = c(bottom, left, top, right) 
-plot(perfSVM, main = "SVM", cex.main = 2.5, cex.lab=1.5)
-abline(0,1, lty="dotted")
-textplot(SVMTable, halign = "center", cex = 1.5)
-dev.off()
+plotModel(name="SVM", performance=perfSVM, table = SVMTable)
+plotModel(name="ADA", performance=perfADA, table = ADATable)
 
-
-png(filename = "output/ADA.png", width = 768, height = 1024)
-par(mfrow=c(2, 1), mai=c(0.8,2,2,2)) # mai = c(bottom, left, top, right) 
-plot(perfADA, main = "ADA", cex.main = 2.5, cex.lab=1.5)
-abline(0,1, lty="dotted")
-textplot(ADATable, halign = "center", cex = 1.5)
-dev.off()
