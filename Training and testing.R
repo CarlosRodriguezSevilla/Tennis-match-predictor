@@ -30,7 +30,7 @@ rm(trainIndex)
 
 # Modeling
 svmModel <- ksvm(
-  w_is_better_ranked~.,
+  w_is_older~.,
   data=train,
   type="C-svc",
   # Classifier
@@ -41,7 +41,7 @@ svmModel <- ksvm(
 )
 
 adaModel <- ada(
-  w_is_better_ranked~.,
+  w_is_older~.,
   data=train,
   type="real")
 
@@ -53,8 +53,8 @@ ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
 
 
 # Prediction objects
-predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_better_ranked"])
-predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_better_ranked"])
+predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_older"])
+predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_older"])
 
 
 
@@ -67,12 +67,12 @@ plotModel(
   name = "SVM", 
   prediction = predSVM,
   model = svmModel, 
-  ytest = na.omit(test)["w_is_better_ranked"]
+  ytest = na.omit(test)["w_is_older"]
   )
 
 plotModel(
   name = "ADA", 
   prediction = predADA,
   model = adaModel, 
-  ytest = test["w_is_better_ranked"]
+  ytest = test["w_is_older"]
 )

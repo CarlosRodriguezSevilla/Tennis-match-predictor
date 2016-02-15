@@ -7,7 +7,7 @@ plotModel <- function(name, prediction, model, ytest){
   resultsDF <- data.frame(ypred, ytest)
   performance <- performance(prediction, "tpr", "fpr")
   
-  tableModel <- table(PREDICTION = ypred, TRUTH = ytest$w_is_better_ranked)
+  tableModel <- table(PREDICTION = ypred, TRUTH = ytest$w_is_older)
   
   png(filename = paste0("output/", name, ".png"), width = 768, height = 1024)
   par(mfrow=c(2, 1), mai=c(0.8,2,2,2)) # mai = c(bottom, left, top, right) 

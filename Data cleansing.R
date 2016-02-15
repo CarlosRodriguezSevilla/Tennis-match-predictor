@@ -26,6 +26,10 @@ for (i in 1:length(filenames))
   dataset$w_is_better_ranked <- dataset$winner_rank < dataset$loser_rank
   dataset$w_is_better_ranked <- as.factor(dataset$w_is_better_ranked)
   
+  # The winner was the oldest one
+  dataset$w_is_older <- dataset$winner_age > dataset$loser_age
+  dataset$w_is_older <- as.factor(dataset$w_is_older)
+  
   dataset$tourney_date <- as.Date(as.character(dataset$tourney_date),format="%Y%m%d")
   
   if(!exists("matches"))
@@ -78,7 +82,7 @@ matches <- matches[c(
   "first_player_seed",     "first_player_entry",         "first_player_hand",       "first_player_ht",
   "first_player_age",      "first_player_rank_points",   "second_player_seed",      "second_player_entry",
   "second_player_hand",    "second_player_ht",           "second_player_age",       "second_player_rank_points",  
-  "best_of",               "round",                      "w_is_better_ranked"
+  "best_of",               "round",                      "w_is_older"
 )]
 
 save(matches, file=paste0(path, "/Matches-clean.RData"))
