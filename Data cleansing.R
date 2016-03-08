@@ -11,7 +11,7 @@ source("Config.R")
 filenames <- list.files(paste0(path, "/tennis_atp-master"), 
                         pattern="atp_matches_201", 
                         full.names=TRUE
-                        )
+)
 
 # Bind all datasets to create a sigle one
 for (i in 1:length(filenames))
@@ -36,7 +36,7 @@ for (i in 1:length(filenames))
   {
     matches <- rbind(matches, dataset)
   }
-    
+  
 }
 rm(i, filenames, dataset)
 
@@ -69,6 +69,16 @@ matches$second_player_id   <- as.factor(matches$second_player_id) # Even though 
 matches$first_player_seed  <- as.factor(matches$first_player_seed)
 matches$second_player_seed <- as.factor(matches$second_player_seed)
 matches$best_of            <- as.factor(matches$best_of)
+
+# Difference in height
+matches$diff_ht <- matches$first_player_ht - matches$second_player_ht
+
+# Difference in age
+matches$diff_age <- matches$first_player_age - matches$second_player_age
+
+# Difference in rank points
+matches$diff_rank_points <- matches$first_player_rank_points - matches$second_player_rank_points
+
 
 # Data frame including only those matches where the winner was not the better ranked
 # matches_w_not_b_ranked <- matches[matches$w_is_better_ranked == FALSE,]
