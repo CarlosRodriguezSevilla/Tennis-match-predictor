@@ -6,6 +6,7 @@ library(tidyr)
 
 library(kernlab)
 library(ada)
+library(randomForest)
 
 library(ROCR)
 library(gplots)
@@ -45,17 +46,21 @@ adaModel <- ada(
   data=train,
   type="real")
 
+rfsModel <- randomForest(w_is_better_ranked~.,
+                        data=train,
+                        na.action=na.omit)
+
 
 
 # Predictor columns
 ypredProbSVM <- predict(object = svmModel, test, type="probabilities")
 ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
-
+ypredProbRFS <- predict(object = rfsModel, na.omit(test), type="prob")
 
 # Prediction objects
 predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_better_ranked"])
 predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_better_ranked"])
-
+predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_better_ranked"])
 
 
 # Results
@@ -74,5 +79,12 @@ plotModel(
   name = "ADA", 
   prediction = predADA,
   model = adaModel, 
+  ytest = test["w_is_better_ranked"]
+)
+
+plotModel(
+  name = "RFS", 
+  prediction = predRFS,
+  model = rfsModel, 
   ytest = test["w_is_better_ranked"]
 )
