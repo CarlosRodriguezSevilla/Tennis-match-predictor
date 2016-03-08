@@ -38,7 +38,7 @@ Let's try to predict whether if the winner of a given tennis match is the player
 
 ## Future steps
 - EDA, graphs, etc.
-- Use a decision tree learning algorithm to obtain a human interpretable hypothesis.
+- Use a decision tree learning algorithm to obtain a human interpretable hypotheses.
 - Principal Component Analysis: convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables called principal components.
 - Lasso (least absolute shrinkage and selection operator).
 - Calculate the most significant features that are likely to have a causal effect on the outcome of the match.
