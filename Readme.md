@@ -27,9 +27,9 @@ Let's try to predict whether if the winner of a given tennis match is the player
 **w_is_better_ranked**: Factor w/ 2 levels "FALSE","TRUE": 1 1 2 1 2 2 1 2 2 1 ...
 
 ## Learning Models
-**Support vector machine**  https://en.wikipedia.org/wiki/Support_vector_machine
-**AdaBoost** https://en.wikipedia.org/wiki/AdaBoost
-**Random Forest** https://en.wikipedia.org/wiki/Random_forest
+**Support vector machine**  https://en.wikipedia.org/wiki/Support_vector_machine  
+**AdaBoost** https://en.wikipedia.org/wiki/AdaBoost  
+**Random Forest** https://en.wikipedia.org/wiki/Random_forest  
 
 
 ## Next steps
