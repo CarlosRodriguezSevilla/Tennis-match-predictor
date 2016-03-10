@@ -31,7 +31,7 @@ rm(trainIndex)
 
 # Modeling
 svmModel <- ksvm(
-  w_is_better_ranked~.,
+  w_is_tallest~.,
   data=train,
   type="C-svc",
   # Classifier
@@ -42,11 +42,11 @@ svmModel <- ksvm(
 )
 
 adaModel <- ada(
-  w_is_better_ranked~.,
+  w_is_tallest~.,
   data=train,
   type="real")
 
-rfsModel <- randomForest(w_is_better_ranked~.,
+rfsModel <- randomForest(w_is_tallest~.,
                         data=train,
                         na.action=na.omit)
 
@@ -58,9 +58,9 @@ ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
 ypredProbRFS <- predict(object = rfsModel, na.omit(test), type="prob")
 
 # Prediction objects
-predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_better_ranked"])
-predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_better_ranked"])
-predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_better_ranked"])
+predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_tallest"])
+predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_tallest"])
+predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_tallest"])
 
 
 # Results
@@ -72,19 +72,19 @@ plotModel(
   name = "SVM", 
   prediction = predSVM,
   model = svmModel, 
-  ytest = na.omit(test)["w_is_better_ranked"]
+  ytest = na.omit(test)["w_is_tallest"]
   )
 
 plotModel(
   name = "ADA", 
   prediction = predADA,
   model = adaModel, 
-  ytest = test["w_is_better_ranked"]
+  ytest = test["w_is_tallest"]
 )
 
 plotModel(
   name = "RFS", 
   prediction = predRFS,
   model = rfsModel, 
-  ytest = test["w_is_better_ranked"]
+  ytest = test["w_is_tallest"]
 )
