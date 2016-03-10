@@ -28,6 +28,8 @@ Let's try to predict whether if the winner of a given tennis match is the player
 
 ## Learning Models
 **Support vector machine**  https://en.wikipedia.org/wiki/Support_vector_machine
+**AdaBoost** https://en.wikipedia.org/wiki/AdaBoost
+**Random Forest** https://en.wikipedia.org/wiki/Random_forest
 
 
 ## Next steps
