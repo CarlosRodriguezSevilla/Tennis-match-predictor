@@ -1,7 +1,7 @@
 Under development!
 
 # Tennis Match Predictor
-Let's try to predict whether if the winner of a given tennis match is the player with the better ATP ranking.
+Let's try to predict whether if the winner of a given tennis match is the tallest of the two players.
 
 ## Variables
 **surface**: Factor w/ 5 levels "Carpet","Clay",..: 2 2 2 2 2 2 2 2 2 2 ...  
