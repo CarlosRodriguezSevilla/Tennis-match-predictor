@@ -3,7 +3,7 @@
 plotModel <- function(name, prediction, model, ytest){
   
   # Classification
-  ypred <- predict(object = model, test)
+  ypred <- predict(object = model, test) # TRUE / FALSE
   resultsDF <- data.frame(ypred, ytest)
   performance <- performance(prediction, "tpr", "fpr")
   
@@ -13,6 +13,7 @@ plotModel <- function(name, prediction, model, ytest){
   par(mfrow=c(2, 1), mai=c(0.8,2,2,2)) # mai = c(bottom, left, top, right) 
   plot(performance, main = name, cex.main = 2.5, cex.lab=1.5)
   abline(0,1, lty="dotted")
-  textplot(tableModel, halign = "center", cex = 1.5)
+  textplot(tableModel, cex = 1.5)
+  title(ylab="Prediction", xlab="Truth", main = "Confusion Matrix", outer = FALSE)
   dev.off()
 }
