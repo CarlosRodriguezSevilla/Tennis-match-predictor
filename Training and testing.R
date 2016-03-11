@@ -30,30 +30,30 @@ rm(trainIndex)
 
 
 # Modeling
-svmModel <- ksvm(
-  w_is_tallest~.,
-  data=train,
-  type="C-svc",
-  # Classifier
-  kernel="rbfdot",
-  # Radial Basis kernel function "Gaussian"
-  kpar = "automatic",
-  prob.model = TRUE
-)
+svmModel <- ksvm(w_is_tallest~.,
+                 data=train,
+                 type="C-svc",
+                 # Classifier
+                 kernel="rbfdot",
+                 # Radial Basis kernel function "Gaussian"
+                 kpar = "automatic",
+                 prob.model = TRUE)
 
-adaModel <- ada(
-  w_is_tallest~.,
-  data=train,
-  type="real")
+adaModel <- ada(w_is_tallest~.,
+                data=train,
+                type="real")
 
 rfsModel <- randomForest(w_is_tallest~.,
                         data=train,
                         na.action=na.omit)
 
+# Predicted values (logical)
+ypredSVM <- predict(object = svmModel, test)
+ypredADA <- predict(object = adaModel, test)
+ypredRFS <- predict(object = rfsModel, test)
 
-
-# Predictor columns
-ypredProbSVM <- predict(object = svmModel, test, type="probabilities")
+# Predicted values (probabilities)
+ypredProbSVM <- predict(object = svmModel, na.omit(test), type="prob")
 ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
 ypredProbRFS <- predict(object = rfsModel, na.omit(test), type="prob")
 
@@ -69,22 +69,22 @@ predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_tallest"])
 dir.create('output', showWarnings = F)
 
 plotModel(
-  name = "SVM", 
-  prediction = predSVM,
-  model = svmModel, 
-  ytest = na.omit(test)["w_is_tallest"]
+  name        = "SVM", 
+  prediction  = predSVM,
+  ypred       = ypredSVM, 
+  ytest       = na.omit(test)[["w_is_tallest"]]
   )
 
 plotModel(
-  name = "ADA", 
-  prediction = predADA,
-  model = adaModel, 
-  ytest = test["w_is_tallest"]
+  name        = "ADA", 
+  prediction  = predADA,
+  ypred       = ypredADA, 
+  ytest       = test$w_is_tallest
 )
 
 plotModel(
-  name = "RFS", 
-  prediction = predRFS,
-  model = rfsModel, 
-  ytest = test["w_is_tallest"]
+  name        = "RFS", 
+  prediction  = predRFS,
+  ypred       = ypredRFS, 
+  ytest       = test$w_is_tallest
 )
