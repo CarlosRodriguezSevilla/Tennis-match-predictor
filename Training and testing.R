@@ -49,8 +49,8 @@ rfsModel <- randomForest(w_is_tallest~.,
 
 # Predicted values (logical)
 ypredSVM <- predict(object = svmModel, test)
-ypredADA <- predict(object = adaModel, test)
-ypredRFS <- predict(object = rfsModel, test)
+ypredADA <- predict(object = adaModel, na.omit(test))
+ypredRFS <- predict(object = rfsModel, na.omit(test))
 
 # Predicted values (probabilities)
 ypredProbSVM <- predict(object = svmModel, na.omit(test), type="prob")
@@ -72,6 +72,7 @@ plotModel(
   name        = "SVM", 
   prediction  = predSVM,
   ypred       = ypredSVM, 
+  ypredProb   = ypredProbSVM, 
   ytest       = na.omit(test)[["w_is_tallest"]]
   )
 
@@ -79,12 +80,14 @@ plotModel(
   name        = "ADA", 
   prediction  = predADA,
   ypred       = ypredADA, 
-  ytest       = test$w_is_tallest
+  ypredProb   = ypredProbADA, 
+  ytest       = na.omit(test)[["w_is_tallest"]]
 )
 
 plotModel(
   name        = "RFS", 
   prediction  = predRFS,
   ypred       = ypredRFS, 
-  ytest       = test$w_is_tallest
+  ypredProb   = ypredProbRFS, 
+  ytest       = na.omit(test)[["w_is_tallest"]]
 )
