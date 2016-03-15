@@ -77,7 +77,7 @@ plotModel(
   )
 
 plotModel(
-  name        = "ADA", 
+  name        = "AdaBoost", 
   prediction  = predADA,
   ypred       = ypredADA, 
   ypredProb   = ypredProbADA, 
@@ -85,7 +85,7 @@ plotModel(
 )
 
 plotModel(
-  name        = "RFS", 
+  name        = "Random Forest", 
   prediction  = predRFS,
   ypred       = ypredRFS, 
   ypredProb   = ypredProbRFS, 

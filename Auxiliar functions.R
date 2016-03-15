@@ -8,46 +8,109 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   
   # Plot
   png(filename = paste0("output/", name, ".png"), width = 768, height = 1024)
-  par(mfrow=c(2,2), mai=c(1.5,1,2.25,1)) # mai = c(bottom, left, top, right) 
+  # par(mfrow=c(2,2), mai=c(1.5,1,2.25,1)) # mai = c(bottom, left, top, right) 
+  layout(matrix(c(1,2,3,4,5,5), 3, 2, byrow = TRUE))
   
+  # ROC Curve
+  par(mai=c(0.5, 1.5, 1, 0.42)) # mai = c(bottom, left, top, right) 
   plot(performance, main = name, cex.main = 2.5, cex.lab=1.5)
   abline(0,1, lty="dotted")
   
+  # Back to default margins
+  par(mai=c(1.02,0.82,0.82,0.42)) # mai = c(bottom, left, top, right) 
+  
+  # Confusion Matrix
   textplot(tableModel, cex = 1.5)
   title(ylab="Prediction", xlab="Truth", main = "Confusion Matrix", outer = FALSE)
   
+  # Barplots
   DF <- data.frame(ytest     = as.numeric(as.logical(ytest)), 
                    ypred     = as.numeric(as.logical(ypred)), 
                    ypredProb = ypredProb[,2]
   )
   
-  DFytestTRUE  <- DF[DF$ytest == 1,]
-  DFytestFALSE <- DF[DF$ytest == 0,]
-  
-  
-  
-  probVectorTrue <- NULL
+  # Real value == 1
+  DFPlot <- data.frame()
   count <- 1
-  for(p in seq(0.1,1,by = 0.05)){    
-    probVectorTrue[count] <- length(DFytestTRUE$ypredProb[DFytestTRUE$ypredProb >= (p-0.05) & DFytestTRUE$ypredProb <= p ])
-    count <- count +1
-  }
-
-  names(probVectorTrue) <- seq(0.1,1,by = 0.05)  
-  barplot(probVectorTrue, las=2, main ="Predicted value when 'real value' == 1")
-  
-  
-  
-  
-  probVectorFalse <- NULL
-  count <- 1
-  for(p in seq(0.1,1,by = 0.05)){    
-    probVectorFalse[count] <- length(DFytestFALSE$ypredProb[DFytestFALSE$ypredProb >= (p-0.05) & DFytestFALSE$ypredProb <= p ])
-    count <- count +1
+  for(p in seq(0.05,1,by = 0.05)){
+    DFPlot[count, "Predicted 1"] <- nrow(DF[DF$ypred == 1 & DF$ytest == 1 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
+    DFPlot[count, "Predicted 0"] <- nrow(DF[DF$ypred == 0 & DF$ytest == 1 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
+    count <- count+1
   }
   
-  names(probVectorFalse) <- seq(0.1,1,by = 0.05)
-  barplot(probVectorFalse, las=2, main ="Predicted value when 'real value' == 0")
+  DFPlot <- t(DFPlot)
+  colnames(DFPlot) <- seq(0.05,1,by = 0.05)
+  barplot(DFPlot, 
+          col= c("green","red"), 
+          main = "Real value == 1", 
+          xlab = "Predicted probability"
+          )
+  legend("topright", 
+         inset = c(0, 0), 
+         legend = rownames(DFPlot), 
+         cex = 1.5, 
+         fill=c("green","red")
+         )
+  
+  
+  
+  # Real value == 0
+  DFPlot <- data.frame()
+  count <- 1
+  for(p in seq(0.05,1,by = 0.05)){
+    DFPlot[count, "Predicted 1"] <- nrow(DF[DF$ypred == 1 & DF$ytest == 0 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
+    DFPlot[count, "Predicted 0"] <- nrow(DF[DF$ypred == 0 & DF$ytest == 0 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
+    count <- count+1
+  }
+  
+  DFPlot <- t(DFPlot)
+  colnames(DFPlot) <- seq(0.05,1,by = 0.05)
+  barplot(DFPlot,
+          col= c("red","green"), 
+          main = "Real value == 0", 
+          xlab = "Predicted probability"
+          )
+  legend("topright", 
+         inset = c(0, 0), 
+         legend = rownames(DFPlot), 
+         cex = 1.5, 
+         fill=c("red","green")
+         )
+  
+  
+  
+  # Hits vs Mistakes
+  DFPlot <- data.frame()
+  count <- 1
+  for(p in seq(0.05,1,by = 0.05)){
+    DFPlot[count, "Hits"] <- nrow(DF[DF$ypred == 1 & DF$ytest == 1 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
+    DFPlot[count, "Hits"] <- DFPlot[count, "Hits"] + nrow(DF[DF$ypred == 0 & DF$ytest == 0 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
+    
+    DFPlot[count, "Mistakes"] <- nrow(DF[DF$ypred == 0 & DF$ytest == 1 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
+    DFPlot[count, "Mistakes"] <- DFPlot[count, "Mistakes"] + nrow(DF[DF$ypred == 1 & DF$ytest == 0 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
+    
+    # To percentage
+    Total <- DFPlot[count, "Hits"] + DFPlot[count, "Mistakes"] 
+    DFPlot[count, "Hits"]     <- DFPlot[count, "Hits"]     / Total
+    DFPlot[count, "Mistakes"] <- DFPlot[count, "Mistakes"] / Total
+    
+    count <- count+1
+  }
+  
+  DFPlot <- t(DFPlot)
+  colnames(DFPlot) <- seq(0.05,1,by = 0.05)
+  barplot(DFPlot, 
+          col= c("green","red"), 
+          main = "Hits vs Mistakes (Percentage)", 
+          xlab = "Predicted probability"
+          )
+  legend("bottomright", 
+         inset = c(0.07, 0.25), 
+         legend = rownames(DFPlot), 
+         cex = 2, 
+         fill=c("green","red")
+         )
   
   dev.off()
 }
+
