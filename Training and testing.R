@@ -25,6 +25,7 @@ trainIndex <- sample(x = nrow(matches)
 
 train <- matches[trainIndex,]
 test  <- matches[-trainIndex,]
+rm(matches)
 
 rm(trainIndex)
 
@@ -65,8 +66,8 @@ predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_tallest"])
 
 # Results
 
-# Create the "/output" folder if it does not already exists
-dir.create('output', showWarnings = F)
+# Create the "/results" folder if it does not already exists
+dir.create('results', showWarnings = F)
 
 plotModel(
   name        = "SVM", 

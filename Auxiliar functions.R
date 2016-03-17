@@ -7,7 +7,7 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   tableModel <- table(PREDICTION = ypred, TRUTH = ytest)
   
   # Plot
-  png(filename = paste0("output/", name, ".png"), width = 768, height = 1024)
+  png(filename = paste0("results/", name, ".png"), width = 768, height = 1024)
   # par(mfrow=c(2,2), mai=c(1.5,1,2.25,1)) # mai = c(bottom, left, top, right) 
   layout(matrix(c(1,2,3,4,5,5), 3, 2, byrow = TRUE))
   
@@ -43,7 +43,8 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   barplot(DFPlot, 
           col= c("green","red"), 
           main = "Real value == 1", 
-          xlab = "Predicted probability"
+          xlab = "Predicted probability",
+          ylab = "Number of observations"
           )
   legend("topright", 
          inset = c(0, 0), 
@@ -68,7 +69,8 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   barplot(DFPlot,
           col= c("red","green"), 
           main = "Real value == 0", 
-          xlab = "Predicted probability"
+          xlab = "Predicted probability",
+          ylab = "Number of observations"
           )
   legend("topright", 
          inset = c(0, 0), 
@@ -102,7 +104,8 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   barplot(DFPlot, 
           col= c("green","red"), 
           main = "Hits vs Mistakes (Percentage)", 
-          xlab = "Predicted probability"
+          xlab = "Predicted probability",
+          ylab = "Percentage"
           )
   legend("bottomright", 
          inset = c(0.07, 0.25), 
