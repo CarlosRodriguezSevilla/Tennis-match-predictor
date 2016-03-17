@@ -29,6 +29,8 @@ Let's try to predict whether if the winner of a given tennis match is the talles
 **AdaBoost** https://en.wikipedia.org/wiki/AdaBoost  
 **Random Forest** https://en.wikipedia.org/wiki/Random_forest  
 
+## Results 
+![alt tag](https://raw.githubusercontent.com/CarlosRodriguezSevilla/Tennis-match-predictor/master/results/SVM.png)
 
 ## Next steps
 - Scale data
