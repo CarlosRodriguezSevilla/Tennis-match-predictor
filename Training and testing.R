@@ -64,6 +64,11 @@ predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_tallest"])
 predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_tallest"])
 
 
+# Save and delete the models
+save(svmModel, adaModel, rfsModel, file=paste0(path, "/Models.RData"))
+rm(svmModel, adaModel, rfsModel)
+
+
 # Results
 
 # Create the "/results" folder if it does not already exists
