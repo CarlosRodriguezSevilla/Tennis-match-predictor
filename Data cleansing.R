@@ -67,6 +67,7 @@ matchesInverted[,18:27] <- winner_cols
 rm(loser_cols, winner_cols)
 
 # Intersect the rows of the previous dataset with the ones of the inverted one.
+# The row as it came will appear first. The inverted will be just below.
 n <- nrow(matches)
 matches <- rbind(matches, matchesInverted)
 matches <- matches[kronecker(1:n, c(0, n), "+"), ]
