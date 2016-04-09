@@ -19,10 +19,19 @@ for (i in 1:length(filenames))
   dataset <- read.csv(filenames[i])
   
   # Remove matches with non-ranked players
-  dataset <- dataset[-which(is.na(dataset$winner_rank)),]
-  dataset <- dataset[-which(is.na(dataset$loser_rank)),]
+  # dataset <- dataset[-which(is.na(dataset$winner_rank)),]
+  # dataset <- dataset[-which(is.na(dataset$loser_rank)),]
   
-  # The winner was the one with the highest ranking?
+  # Remove the matches that doesn't have the height variable computed
+  if(length(which(is.na(dataset$winner_ht)))>0){
+    dataset <- dataset[-which(is.na(dataset$winner_ht)),] 
+  }
+  
+  if(length(which(is.na(dataset$loser_ht)))>0){
+    dataset <- dataset[-which(is.na(dataset$loser_ht)),]
+  }
+  
+  # Was the winner the tallest player?
   dataset$w_is_tallest <- dataset$winner_ht < dataset$loser_ht
   dataset$w_is_tallest <- as.factor(dataset$w_is_tallest)
   
@@ -71,7 +80,7 @@ rm(loser_cols, winner_cols)
 n <- nrow(matches)
 matches <- rbind(matches, matchesInverted)
 matches <- matches[kronecker(1:n, c(0, n), "+"), ]
-rm(matchesInverted)
+rm(matchesInverted, n)
 
 
 # Convert to factor where needed
