@@ -14,8 +14,18 @@ library(gplots)
 source("Config.R") # Load config file with root path, etc
 source("Auxiliar functions.R")
 
-load(paste0(path, "/Matches-clean.RData"))
-
+if(exists("Mongo")){
+  if(Mongo==T){
+    load(paste0(path, "/Matches-clean(Mongo).RData"))
+    warning("Dataset is loaded from MongoDB")
+  }
+  else if(Mongo==F){
+    load(paste0(path, "/Matches-clean.RData"))
+    warning("Dataset is loaded from RData")
+  }
+} else{
+  stop("Wrong configuration. Parameter 'Mongo' is missing.")
+}
 
 # Sampling
 set.seed(2)
