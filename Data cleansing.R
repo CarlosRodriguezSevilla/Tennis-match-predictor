@@ -4,8 +4,8 @@ rm(list=ls()) # Clear workspace
 library(dplyr)
 library(tidyr)
 
-# Load config file with root path, etc
-source("Config.R")
+source("Config.R") # Load config file with root path, etc
+
 
 # Load every filename of datasets
 filenames <- list.files(paste0(path, "/tennis_atp-master"), 
@@ -18,24 +18,14 @@ for (i in 1:length(filenames))
 {
   dataset <- read.csv(filenames[i])
   
-  # Remove matches with non-ranked players
-  # dataset <- dataset[-which(is.na(dataset$winner_rank)),]
-  # dataset <- dataset[-which(is.na(dataset$loser_rank)),]
-  
-  # Remove the matches that doesn't have the height variable computed
-  if(length(which(is.na(dataset$winner_ht)))>0){
-    dataset <- dataset[-which(is.na(dataset$winner_ht)),] 
-  }
-  
-  if(length(which(is.na(dataset$loser_ht)))>0){
-    dataset <- dataset[-which(is.na(dataset$loser_ht)),]
-  }
-  
-  # Was the winner the tallest player?
+  # Was the winner the tallest player? (response variable)
   dataset$w_is_tallest <- dataset$winner_ht < dataset$loser_ht
   dataset$w_is_tallest <- as.factor(dataset$w_is_tallest)
   
-  dataset$tourney_date <- as.Date(as.character(dataset$tourney_date),format="%Y%m%d")
+  # Remove the rows where the response variable is NA.
+  if(length(which(is.na(dataset$w_is_tallest)))>0){
+    dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
+  }
   
   if(!exists("matches"))
   {
@@ -55,28 +45,33 @@ rm(i, filenames, dataset)
 matches$winner_name <- as.character(matches$winner_name)
 matches$loser_name <- as.character(matches$loser_name)
 
-
+# Replicate every single row swapping winner columns for loser columns. 
 # Rename column names
 colnames(matches) <- gsub("winner", "first_player", colnames(matches))
 colnames(matches) <- gsub("loser", "second_player", colnames(matches))
 
-
-# Replicate every single row swapping winner columns for loser columns. 
-
 # Save winner and loser columns into variables
-winner_cols <- matches[,8:17]
-loser_cols  <- matches[,18:27]
+winner_cols <- matches[, grep("first_player", colnames(matches))]
+loser_cols  <- matches[, grep("second_player", colnames(matches))]
 
-# Create new dataframe for inverted results
+# Duplicate dataframe for inverted results
 matchesInverted <- matches
 
 # Invert results
-matchesInverted[,8:17]  <- loser_cols
-matchesInverted[,18:27] <- winner_cols
-rm(loser_cols, winner_cols)
+for (name_second in colnames(loser_cols)){
+  name_first <- gsub("second_player", "first_player", name_second)
+  matchesInverted[,name_first] <- loser_cols[,name_second]
+}
+
+for (name_first in colnames(winner_cols)){
+  name_second <- gsub("first_player", "second_player", name_first)
+  matchesInverted[,name_second] <- winner_cols[,name_first]
+}
+
+rm(loser_cols, winner_cols, name_first, name_second)
 
 # Intersect the rows of the previous dataset with the ones of the inverted one.
-# The row as it came will appear first. The inverted will be just below.
+# The row as it came will appear first. The duplicated and inverted will be just below.
 n <- nrow(matches)
 matches <- rbind(matches, matchesInverted)
 matches <- matches[kronecker(1:n, c(0, n), "+"), ]
@@ -84,12 +79,24 @@ rm(matchesInverted, n)
 
 
 # Convert to factor where needed
-matches$draw_size          <- as.factor(matches$draw_size)
-matches$first_player_id    <- as.factor(matches$first_player_id)  # Even though it won't be added to the model
-matches$second_player_id   <- as.factor(matches$second_player_id) # Even though it won't be added to the model
-matches$first_player_seed  <- as.factor(matches$first_player_seed)
-matches$second_player_seed <- as.factor(matches$second_player_seed)
-matches$best_of            <- as.factor(matches$best_of)
+matches$surface             <- as.factor(matches$surface)
+matches$draw_size           <- as.factor(matches$draw_size)
+matches$tourney_level       <- as.factor(matches$tourney_level)
+matches$best_of             <- as.factor(matches$best_of)
+matches$round               <- as.factor(matches$round)
+matches$w_is_tallest        <- as.factor(matches$w_is_tallest)
+
+matches$first_player_entry  <- as.factor(matches$first_player_entry)
+matches$second_player_entry <- as.factor(matches$second_player_entry)
+matches$first_player_hand   <- as.factor(matches$first_player_hand)
+matches$second_player_hand  <- as.factor(matches$second_player_hand)
+matches$first_player_id     <- as.factor(matches$first_player_id)  # Even though it won't be added to the model
+matches$second_player_id    <- as.factor(matches$second_player_id) # Even though it won't be added to the model
+matches$first_player_seed   <- as.factor(matches$first_player_seed)
+matches$second_player_seed  <- as.factor(matches$second_player_seed)
+
+# Format date
+matches$tourney_date <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
 
 # Difference in height
 matches$diff_ht <- matches$first_player_ht - matches$second_player_ht
@@ -100,6 +107,10 @@ matches$diff_age <- matches$first_player_age - matches$second_player_age
 # Difference in rank points
 matches$diff_rank_points <- matches$first_player_rank_points - matches$second_player_rank_points
 
+# Remove the rows with non-ranked players
+if(length(which(is.na(matches$diff_rank_points)))>0){
+  matches <- matches[-which(is.na(matches$diff_rank_points)),]
+}
 
 matches <- matches[c(
   "surface",               "draw_size",                  "tourney_level",           "match_num",
