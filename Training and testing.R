@@ -14,17 +14,21 @@ library(gplots)
 source("Config.R") # Load config file with root path, etc
 source("Auxiliar functions.R")
 
-if(exists("Mongo")){
-  if(Mongo==T){
+if(exists("onMongoDB") && exists("onPostgreSQL")){
+  if(onMongoDB==T){
     load(paste0(path, "/Matches-clean(Mongo).RData"))
     warning("Dataset is loaded from MongoDB")
   }
-  else if(Mongo==F){
+  else if(onPostgreSQL==T){
+    load(paste0(path, "/Matches-clean(PostgreSQL).RData"))
+    warning("Dataset is loaded from PostgreSQL")
+  }
+  else {
     load(paste0(path, "/Matches-clean.RData"))
     warning("Dataset is loaded from RData")
   }
 } else{
-  stop("Wrong configuration. Parameter 'Mongo' is missing.")
+  stop("Wrong configuration. Parameters missing.")
 }
 
 # Sampling

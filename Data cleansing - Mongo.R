@@ -1,6 +1,8 @@
+# Let's try to mimic the operations currently coded in the 'Data cleansing.R' file, with MongoDB this time
 
 rm(list=ls()) # Clear workspace
 
+library(mongolite)
 library(dplyr)
 library(tidyr)
 
@@ -13,7 +15,21 @@ filenames <- list.files(paste0(path, "/tennis_atp-master"),
                         full.names=TRUE
 )
 
-# Bind all datasets to create a sigle one
+# Create collection
+con <- mongo(
+  collection = "matches", 
+  db = "tennis", 
+  url = "mongodb://localhost",
+  verbose = TRUE
+)
+
+# Empty collection
+if(con$count() > 0){
+  con$remove(query = "{}", multiple=T)  
+}
+con$count()
+
+# Add csvs to collection
 for (i in 1:length(filenames))
 {
   dataset <- read.csv(filenames[i])
@@ -27,18 +43,12 @@ for (i in 1:length(filenames))
     dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
   }
   
-  if(!exists("matches"))
-  {
-    matches <- dataset
-  }
-  else
-  {
-    matches <- rbind(matches, dataset)
-  }
+  con$insert(dataset)
   
 }
 rm(i, filenames, dataset)
 
+matches <- con$find()
 
 # Convert names to characters.
 # Were they left as factors, troubles would arise due to new levels
@@ -120,4 +130,6 @@ matches <- matches[c(
   "best_of",               "round",                      "w_is_tallest"
 )]
 
-save(matches, file=paste0(path, "/Matches-clean.RData"))
+save(matches, file=paste0(path, "/Matches-clean(Mongo).RData"))
+
+rm(con)

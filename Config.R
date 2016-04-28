@@ -2,4 +2,7 @@
 path <- "/home/kako/Documentos/Dev/Data challenges/Tennis"
 setwd(path)
 
-Mongo <- FALSE
+onMongoDB    <- FALSE
+onPostgreSQL <- TRUE
+
+# TO DO: check XOR of both
