@@ -77,27 +77,6 @@ matches <- rbind(matches, matchesInverted)
 matches <- matches[kronecker(1:n, c(0, n), "+"), ]
 rm(matchesInverted, n)
 
-
-# Convert to factor where needed
-matches$surface             <- as.factor(matches$surface)
-matches$draw_size           <- as.factor(matches$draw_size)
-matches$tourney_level       <- as.factor(matches$tourney_level)
-matches$best_of             <- as.factor(matches$best_of)
-matches$round               <- as.factor(matches$round)
-matches$w_is_tallest        <- as.factor(matches$w_is_tallest)
-
-matches$first_player_entry  <- as.factor(matches$first_player_entry)
-matches$second_player_entry <- as.factor(matches$second_player_entry)
-matches$first_player_hand   <- as.factor(matches$first_player_hand)
-matches$second_player_hand  <- as.factor(matches$second_player_hand)
-matches$first_player_id     <- as.factor(matches$first_player_id)  # Even though it won't be added to the model
-matches$second_player_id    <- as.factor(matches$second_player_id) # Even though it won't be added to the model
-matches$first_player_seed   <- as.factor(matches$first_player_seed)
-matches$second_player_seed  <- as.factor(matches$second_player_seed)
-
-# Format date
-matches$tourney_date <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
-
 # Difference in height
 matches$diff_ht <- matches$first_player_ht - matches$second_player_ht
 

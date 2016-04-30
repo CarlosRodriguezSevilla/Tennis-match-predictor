@@ -1,4 +1,3 @@
-# Let's try to mimic the operations currently coded in the 'Data cleansing.R' file, with MongoDB this time
 
 rm(list=ls()) # Clear workspace
 
@@ -15,9 +14,9 @@ filenames <- list.files(paste0(path, "/tennis_atp-master"),
                         full.names=TRUE
 )
 
-# Create collection
+# Create collection of raw matches
 con <- mongo(
-  collection = "matches", 
+  collection = "matches_raw", 
   db = "tennis", 
   url = "mongodb://localhost",
   verbose = TRUE
@@ -27,7 +26,6 @@ con <- mongo(
 if(con$count() > 0){
   con$remove(query = "{}", multiple=T)  
 }
-con$count()
 
 # Add csvs to collection
 for (i in 1:length(filenames))
@@ -43,12 +41,17 @@ for (i in 1:length(filenames))
     dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
   }
   
+  # Insert raw data
   con$insert(dataset)
   
 }
 rm(i, filenames, dataset)
 
+# Fetch all the matches
 matches <- con$find()
+
+# Close the connection
+rm(con)
 
 # Convert names to characters.
 # Were they left as factors, troubles would arise due to new levels
@@ -87,27 +90,6 @@ matches <- rbind(matches, matchesInverted)
 matches <- matches[kronecker(1:n, c(0, n), "+"), ]
 rm(matchesInverted, n)
 
-
-# Convert to factor where needed
-matches$surface             <- as.factor(matches$surface)
-matches$draw_size           <- as.factor(matches$draw_size)
-matches$tourney_level       <- as.factor(matches$tourney_level)
-matches$best_of             <- as.factor(matches$best_of)
-matches$round               <- as.factor(matches$round)
-matches$w_is_tallest        <- as.factor(matches$w_is_tallest)
-
-matches$first_player_entry  <- as.factor(matches$first_player_entry)
-matches$second_player_entry <- as.factor(matches$second_player_entry)
-matches$first_player_hand   <- as.factor(matches$first_player_hand)
-matches$second_player_hand  <- as.factor(matches$second_player_hand)
-matches$first_player_id     <- as.factor(matches$first_player_id)  # Even though it won't be added to the model
-matches$second_player_id    <- as.factor(matches$second_player_id) # Even though it won't be added to the model
-matches$first_player_seed   <- as.factor(matches$first_player_seed)
-matches$second_player_seed  <- as.factor(matches$second_player_seed)
-
-# Format date
-matches$tourney_date <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
-
 # Difference in height
 matches$diff_ht <- matches$first_player_ht - matches$second_player_ht
 
@@ -130,6 +112,22 @@ matches <- matches[c(
   "best_of",               "round",                      "w_is_tallest"
 )]
 
-save(matches, file=paste0(path, "/Matches-clean(Mongo).RData"))
+# Create connection to the cleaned matches collection
+con <- mongo(
+  collection = "matches_clean", 
+  db = "tennis", 
+  url = "mongodb://localhost",
+  verbose = TRUE
+)
 
+# Empty collection
+if(con$count() > 0){
+  con$remove(query = "{}", multiple=T)  
+}
+
+# Insert the cleaned data
+con$insert(matches)
+rm(matches)
+
+# Close the connection
 rm(con)

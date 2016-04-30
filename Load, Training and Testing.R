@@ -1,6 +1,9 @@
 
 rm(list=ls(all = TRUE)) # Clear workspace
 
+library(RPostgreSQL)
+library(mongolite)
+
 library(dplyr)
 library(tidyr)
 
@@ -14,28 +17,83 @@ library(gplots)
 source("Config.R") # Load config file with root path, etc
 source("Auxiliar functions.R")
 
-if(exists("onMongoDB") && exists("onPostgreSQL")){
-  if(onMongoDB==T){
-    load(paste0(path, "/Matches-clean(Mongo).RData"))
-    warning("Dataset is loaded from MongoDB")
+if(onMongoDB==T)
+{
+  # Create connection to the cleaned matches collection
+  con <- mongo(
+    collection = "matches_clean", 
+    db = "tennis", 
+    url = "mongodb://localhost",
+    verbose = TRUE
+  )
+  
+  # Check data availability
+  if(con$count() == 0){
+    stop("No data available.") 
   }
-  else if(onPostgreSQL==T){
-    load(paste0(path, "/Matches-clean(PostgreSQL).RData"))
-    warning("Dataset is loaded from PostgreSQL")
-  }
-  else {
-    load(paste0(path, "/Matches-clean.RData"))
-    warning("Dataset is loaded from RData")
-  }
-} else{
-  stop("Wrong configuration. Parameters missing.")
+  
+  # Fetch all the matches
+  matches <- con$find()
+  
+  # Close the connection
+  rm(con)
+  
+  warning("Dataset is loaded from MongoDB")
+  
+} else if(onPostgreSQL==T)
+{
+  pw <- { "tennispredictor" }
+  
+  # Loads the PostgreSQL driver
+  drv <- dbDriver("PostgreSQL")
+  
+  # Creates a connection to the PostgreSQL database
+  con <- dbConnect(
+    drv, dbname = "tennis",
+    host = "localhost", port = 5432,
+    user = "tennispredictor", password = pw
+  )
+  rm(pw) # removes the password
+  
+  # Fetch all the matches
+  matches <- dbGetQuery(con, "SELECT * from matches_clean")
+  
+  # Close the connection
+  dbDisconnect(con)
+  dbUnloadDriver(drv)
+  
+  warning("Dataset is loaded from PostgreSQL")
+  
+} else 
+{
+  load(paste0(path, "/Matches-clean.RData"))
+  warning("Dataset is loaded from RData")
 }
+
+# Convert to factor where needed
+matches$surface             <- as.factor(matches$surface)
+matches$draw_size           <- as.factor(matches$draw_size)
+matches$tourney_level       <- as.factor(matches$tourney_level)
+matches$best_of             <- as.factor(matches$best_of)
+matches$round               <- as.factor(matches$round)
+matches$w_is_tallest        <- as.factor(matches$w_is_tallest)
+
+matches$first_player_entry  <- as.factor(matches$first_player_entry)
+matches$second_player_entry <- as.factor(matches$second_player_entry)
+matches$first_player_hand   <- as.factor(matches$first_player_hand)
+matches$second_player_hand  <- as.factor(matches$second_player_hand)
+matches$first_player_seed   <- as.factor(matches$first_player_seed)
+matches$second_player_seed  <- as.factor(matches$second_player_seed)
+
+# There is no tourney_date field at this moment.
+# matches$tourney_date <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
+
 
 # Sampling
 set.seed(2)
 trainIndex <- sample(x = nrow(matches)
                      , size = nrow(matches)*0.7
-                     )
+)
 
 train <- matches[trainIndex,]
 test  <- matches[-trainIndex,]
@@ -59,8 +117,8 @@ adaModel <- ada(w_is_tallest~.,
                 type="real")
 
 rfsModel <- randomForest(w_is_tallest~.,
-                        data=train,
-                        na.action=na.omit)
+                         data=train,
+                         na.action=na.omit)
 
 # Predicted values (logical)
 ypredSVM <- predict(object = svmModel, test)
@@ -84,17 +142,13 @@ rm(svmModel, adaModel, rfsModel)
 
 
 # Results
-
-# Create the "/results" folder if it does not already exists
-dir.create('results', showWarnings = F)
-
 plotModel(
   name        = "SVM", 
   prediction  = predSVM,
   ypred       = ypredSVM, 
   ypredProb   = ypredProbSVM, 
   ytest       = na.omit(test)[["w_is_tallest"]]
-  )
+)
 
 plotModel(
   name        = "AdaBoost", 

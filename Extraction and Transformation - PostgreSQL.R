@@ -1,4 +1,3 @@
-# Let's try to mimic the operations currently coded in the 'Data cleansing.R' file, with PostgreSQL this time
 
 rm(list=ls()) # Clear workspace
 
@@ -15,14 +14,12 @@ filenames <- list.files(paste0(path, "/tennis_atp-master"),
                         full.names=TRUE
 )
 
-pw <- {
-  "tennispredictor"
-}
+pw <- { "tennispredictor"}
 
 # Loads the PostgreSQL driver
 drv <- dbDriver("PostgreSQL")
 
-# Creates a connection to the postgres database
+# Creates a connection to the PostgreSQL database
 con <- dbConnect(
   drv, dbname = "tennis",
   host = "localhost", port = 5432,
@@ -31,12 +28,12 @@ con <- dbConnect(
 rm(pw) # removes the password
 
 # Delete matches table if it already exists
-if ( dbExistsTable(con, "matches") ){
-  dbRemoveTable(con, "matches")
+if ( dbExistsTable(con, "matches_raw") ){
+  dbRemoveTable(con, "matches_raw")
 }
 
 # Specifies the details of the table before creating it
-sql_command <- "CREATE TABLE matches
+sql_command <- "CREATE TABLE matches_raw
 (
   tourney_id varchar(12),
   tourney_name varchar(50),
@@ -95,7 +92,7 @@ WITH (
   OIDS=FALSE
 );
 
-ALTER TABLE matches OWNER TO tennispredictor;
+ALTER TABLE matches_raw OWNER TO tennispredictor;
 "
 
 # Sends the command and creates the table
@@ -116,9 +113,9 @@ for (i in 1:length(filenames))
     dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
   }
   
-  # con$insert(dataset)
+  # Insert raw data
   dbWriteTable(
-    con, "matches", 
+    con, "matches_raw", 
     value = dataset, 
     append = TRUE, 
     row.names = FALSE
@@ -126,7 +123,8 @@ for (i in 1:length(filenames))
 }
 rm(i, filenames, dataset)
 
-matches <- dbGetQuery(con, "SELECT * from matches")
+# Fetch all the matches
+matches <- dbGetQuery(con, "SELECT * from matches_raw")
 
 # Convert names to characters. Not necessary here. Already characters
 # Were they left as factors, troubles would arise due to new levels
@@ -165,27 +163,6 @@ matches <- rbind(matches, matchesInverted)
 matches <- matches[kronecker(1:n, c(0, n), "+"), ]
 rm(matchesInverted, n)
 
-
-# Convert to factor where needed
-matches$surface             <- as.factor(matches$surface)
-matches$draw_size           <- as.factor(matches$draw_size)
-matches$tourney_level       <- as.factor(matches$tourney_level)
-matches$best_of             <- as.factor(matches$best_of)
-matches$round               <- as.factor(matches$round)
-matches$w_is_tallest        <- as.factor(matches$w_is_tallest)
-
-matches$first_player_entry  <- as.factor(matches$first_player_entry)
-matches$second_player_entry <- as.factor(matches$second_player_entry)
-matches$first_player_hand   <- as.factor(matches$first_player_hand)
-matches$second_player_hand  <- as.factor(matches$second_player_hand)
-matches$first_player_id     <- as.factor(matches$first_player_id)  # Even though it won't be added to the model
-matches$second_player_id    <- as.factor(matches$second_player_id) # Even though it won't be added to the model
-matches$first_player_seed   <- as.factor(matches$first_player_seed)
-matches$second_player_seed  <- as.factor(matches$second_player_seed)
-
-# Format date. Not necessary here. Already in the right date format
-# matches$tourney_date <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
-
 # Difference in height
 matches$diff_ht <- matches$first_player_ht - matches$second_player_ht
 
@@ -208,7 +185,53 @@ matches <- matches[c(
   "best_of",               "round",                      "w_is_tallest"
 )]
 
-save(matches, file=paste0(path, "/Matches-clean(PostgreSQL).RData"))
+# Delete clean matches table if it already exists
+if ( dbExistsTable(con, "matches_clean") ){
+  dbRemoveTable(con, "matches_clean")
+}
+
+sql_command <- "CREATE TABLE matches_clean
+(
+  surface varchar(10),               
+  draw_size smallint,              
+  tourney_level varchar(2),
+  match_num smallint,
+  first_player_seed smallint, 
+  first_player_entry varchar(2),      
+  first_player_hand varchar(2),       
+  first_player_ht smallint,
+  first_player_age numeric(4,2),      
+  first_player_rank_points smallint,   
+  second_player_seed smallint,      
+  second_player_entry varchar(2),
+  second_player_hand varchar(2),    
+  second_player_ht smallint,           
+  second_player_age numeric(4,2),       
+  second_player_rank_points smallint,  
+  best_of smallint,               
+  round varchar(4),                      
+  w_is_tallest boolean
+)
+
+WITH (
+OIDS=FALSE
+);
+
+ALTER TABLE matches_clean OWNER TO tennispredictor;
+"
+
+# Sends the command and creates the table
+dbGetQuery(con, sql_command)
+rm(sql_command)
+
+# Insert the cleaned data
+dbWriteTable(
+  con, "matches_clean", 
+  value = matches, 
+  append = TRUE, 
+  row.names = FALSE
+)
+rm(matches)
 
 # Close the connection
 dbDisconnect(con)

@@ -2,12 +2,25 @@
 
 plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   
+  if(onMongoDB==T){
+    resultsPath <- "MongoDB/"
+  }
+  else if(onPostgreSQL==T){
+    resultsPath <- "PostgreSQL/"
+  }
+  else {
+    resultsPath <- "R/"
+  }
+  
+  # Create the results folder if it does not already exists
+  dir.create(paste0('results/', resultsPath), showWarnings = F)
+  
   # Classification
   performance <- performance(prediction, "tpr", "fpr")
   tableModel <- table(PREDICTION = ypred, TRUTH = ytest)
   
   # Plot
-  png(filename = paste0("results/", name, ".png"), width = 768, height = 1024)
+  png(filename = paste0("results/", resultsPath, name, ".png"), width = 768, height = 1024)
   # par(mfrow=c(2,2), mai=c(1.5,1,2.25,1)) # mai = c(bottom, left, top, right) 
   layout(matrix(c(1,2,3,4,5,5), 3, 2, byrow = TRUE))
   
