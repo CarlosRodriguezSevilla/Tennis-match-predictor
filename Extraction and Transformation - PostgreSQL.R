@@ -8,6 +8,8 @@ library(tidyr)
 source("Config.R") # Load config file with root path, etc
 
 
+# EXTRACTION
+
 # Load every filename of datasets
 filenames <- list.files(paste0(path, "/tennis_atp-master"), 
                         pattern="atp_matches_[0-9]{4}", 
@@ -35,57 +37,23 @@ if ( dbExistsTable(con, "matches_raw") ){
 # Specifies the details of the table before creating it
 sql_command <- "CREATE TABLE matches_raw
 (
-  tourney_id varchar(12),
-  tourney_name varchar(50),
-  surface varchar(10),
-  draw_size smallint,
-  tourney_level varchar(2),
-  tourney_date date,
-  match_num smallint,
-  winner_id integer,
-  winner_seed smallint,
-  winner_entry varchar(2),
-  winner_name varchar(30),
-  winner_hand varchar(2),
-  winner_ht smallint,
-  winner_ioc char(3),
-  winner_age numeric(4,2),
-  winner_rank smallint,
-  winner_rank_points smallint,
-  loser_id integer,
-  loser_seed smallint,
-  loser_entry varchar(2),
-  loser_name varchar(30),
-  loser_hand varchar(2),
-  loser_ht smallint,
-  loser_ioc char(3),
-  loser_age numeric(4,2),
-  loser_rank smallint,
-  loser_rank_points smallint,
-  score varchar(50),
-  best_of smallint,
-  round varchar(4),
-  minutes smallint,  
-  w_ace smallint,
-  w_df smallint,
-  w_svpt smallint,
-  w_1stIn smallint,
-  w_1stWon smallint, 
-  w_2ndWon smallint,
-  w_SvGms smallint,
-  w_bpSaved smallint,
-  w_bpFaced smallint,
-  l_ace smallint,
-  l_df smallint,   
-  l_svpt smallint,
-  l_1stIn smallint,
-  l_1stWon smallint,
-  l_2ndWon smallint,
-  l_SvGms smallint,
-  l_bpSaved smallint,
-  l_bpFaced smallint, 
-
-  w_is_tallest boolean
+  tourney_id varchar(12),         tourney_name varchar(50),         surface varchar(10),
+  draw_size smallint,             tourney_level varchar(2),         tourney_date date,
+  match_num smallint,             winner_id integer,                winner_seed smallint,
+  winner_entry varchar(2),        winner_name varchar(30),          winner_hand varchar(2),
+  winner_ht smallint,             winner_ioc char(3),               winner_age numeric(4,2),
+  winner_rank smallint,           winner_rank_points smallint,      loser_id integer,
+  loser_seed smallint,            loser_entry varchar(2),           loser_name varchar(30),
+  loser_hand varchar(2),          loser_ht smallint,                loser_ioc char(3),
+  loser_age numeric(4,2),         loser_rank smallint,              loser_rank_points smallint,
+  score varchar(50),              best_of smallint,                 round varchar(4),
+  minutes smallint,               w_ace smallint,                   w_df smallint,
+  w_svpt smallint,                w_1stIn smallint,                 w_1stWon smallint,
+  w_2ndWon smallint,              w_SvGms smallint,                 w_bpSaved smallint,
+  w_bpFaced smallint,             l_ace smallint,                   l_df smallint,   
+  l_svpt smallint,                l_1stIn smallint,                 l_1stWon smallint,
+  l_2ndWon smallint,              l_SvGms smallint,                 l_bpSaved smallint,
+  l_bpFaced smallint,             w_is_tallest boolean
 )
 
 WITH (
@@ -125,6 +93,9 @@ rm(i, filenames, dataset)
 
 # Fetch all the matches
 matches <- dbGetQuery(con, "SELECT * from matches_raw")
+
+
+# TRANSFORMATION
 
 # Convert names to characters. Not necessary here. Already characters
 # Were they left as factors, troubles would arise due to new levels
@@ -192,25 +163,13 @@ if ( dbExistsTable(con, "matches_clean") ){
 
 sql_command <- "CREATE TABLE matches_clean
 (
-  surface varchar(10),               
-  draw_size smallint,              
-  tourney_level varchar(2),
-  match_num smallint,
-  first_player_seed smallint, 
-  first_player_entry varchar(2),      
-  first_player_hand varchar(2),       
-  first_player_ht smallint,
-  first_player_age numeric(4,2),      
-  first_player_rank_points smallint,   
-  second_player_seed smallint,      
-  second_player_entry varchar(2),
-  second_player_hand varchar(2),    
-  second_player_ht smallint,           
-  second_player_age numeric(4,2),       
-  second_player_rank_points smallint,  
-  best_of smallint,               
-  round varchar(4),                      
-  w_is_tallest boolean
+surface varchar(10),                draw_size smallint,             tourney_level varchar(2),
+match_num smallint,                 first_player_seed smallint,     first_player_entry varchar(2),      
+first_player_hand varchar(2),       first_player_ht smallint,       first_player_age numeric(4,2),      
+first_player_rank_points smallint,  second_player_seed smallint,    second_player_entry varchar(2),
+second_player_hand varchar(2),      second_player_ht smallint,      second_player_age numeric(4,2),       
+second_player_rank_points smallint, best_of smallint,               round varchar(4),                      
+w_is_tallest boolean
 )
 
 WITH (

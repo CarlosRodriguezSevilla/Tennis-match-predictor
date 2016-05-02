@@ -17,6 +17,9 @@ library(gplots)
 source("Config.R") # Load config file with root path, etc
 source("Auxiliar functions.R")
 
+
+# LOAD
+
 if(onMongoDB==T)
 {
   # Create connection to the cleaned matches collection
@@ -102,7 +105,8 @@ rm(matches)
 rm(trainIndex)
 
 
-# Modeling
+# TRAINING
+
 svmModel <- ksvm(w_is_tallest~.,
                  data=train,
                  type="C-svc",
@@ -119,6 +123,8 @@ adaModel <- ada(w_is_tallest~.,
 rfsModel <- randomForest(w_is_tallest~.,
                          data=train,
                          na.action=na.omit)
+
+# TESTING
 
 # Predicted values (logical)
 ypredSVM <- predict(object = svmModel, test)

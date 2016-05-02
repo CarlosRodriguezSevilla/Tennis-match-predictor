@@ -8,6 +8,8 @@ library(tidyr)
 source("Config.R") # Load config file with root path, etc
 
 
+# EXTRACTION
+
 # Load every filename of datasets
 filenames <- list.files(paste0(path, "/tennis_atp-master"), 
                         pattern="atp_matches_[0-9]{4}", 
@@ -53,10 +55,13 @@ matches <- con$find()
 # Close the connection
 rm(con)
 
+
+# TRANSFORMATION
+
 # Convert names to characters.
 # Were they left as factors, troubles would arise due to new levels
-matches$winner_name <- as.character(matches$winner_name)
-matches$loser_name <- as.character(matches$loser_name)
+# matches$winner_name <- as.character(matches$winner_name)
+# matches$loser_name <- as.character(matches$loser_name)
 
 # Replicate every single row swapping winner columns for loser columns. 
 # Rename column names
@@ -120,7 +125,7 @@ con <- mongo(
   verbose = TRUE
 )
 
-# Empty collection
+# Remove collection if not empty
 if(con$count() > 0){
   con$remove(query = "{}", multiple=T)  
 }

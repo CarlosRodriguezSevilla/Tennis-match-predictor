@@ -3,7 +3,7 @@ path <- "/home/kako/Documentos/Dev/Data challenges/Tennis"
 setwd(path)
 
 onMongoDB    <- FALSE
-onPostgreSQL <- FALSE
+onPostgreSQL <- TRUE
 
 # Both of the above parameters must never be TRUE at the same time. 
 # If both onMongoDB and onPostgreSQL parameters are TRUE the execution is halted.

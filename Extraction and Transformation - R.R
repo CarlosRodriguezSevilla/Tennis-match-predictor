@@ -7,6 +7,8 @@ library(tidyr)
 source("Config.R") # Load config file with root path, etc
 
 
+# EXTRACTION
+
 # Load every filename of datasets
 filenames <- list.files(paste0(path, "/tennis_atp-master"), 
                         pattern="atp_matches_[0-9]{4}", 
@@ -39,6 +41,8 @@ for (i in 1:length(filenames))
 }
 rm(i, filenames, dataset)
 
+
+# TRANSFORMATION
 
 # Convert names to characters.
 # Were they left as factors, troubles would arise due to new levels
