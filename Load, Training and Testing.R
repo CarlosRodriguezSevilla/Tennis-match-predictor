@@ -88,9 +88,6 @@ matches$second_player_hand  <- as.factor(matches$second_player_hand)
 matches$first_player_seed   <- as.factor(matches$first_player_seed)
 matches$second_player_seed  <- as.factor(matches$second_player_seed)
 
-# There is no tourney_date field at this moment.
-# matches$tourney_date <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
-
 
 # Sampling
 set.seed(2)

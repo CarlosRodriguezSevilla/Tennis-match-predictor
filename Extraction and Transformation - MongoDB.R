@@ -58,6 +58,11 @@ rm(con)
 
 # TRANSFORMATION
 
+# Extract the year of the game from the 'tourney_date' field
+matches$tourney_date  <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
+matches$tourney_year  <- as.numeric(format(matches$tourney_date,'%Y'))
+matches$tourney_month <- as.numeric(format(matches$tourney_date,'%m'))
+
 # Convert names to characters.
 # Were they left as factors, troubles would arise due to new levels
 # matches$winner_name <- as.character(matches$winner_name)
@@ -110,11 +115,11 @@ if(length(which(is.na(matches$diff_rank_points)))>0){
 }
 
 matches <- matches[c(
-  "surface",               "draw_size",                  "tourney_level",           "match_num",
+  "surface",               "tourney_year",               "tourney_level",           "match_num",
   "first_player_seed",     "first_player_entry",         "first_player_hand",       "first_player_ht",
   "first_player_age",      "first_player_rank_points",   "second_player_seed",      "second_player_entry",
   "second_player_hand",    "second_player_ht",           "second_player_age",       "second_player_rank_points",  
-  "best_of",               "round",                      "w_is_tallest"
+  "best_of",               "round",                      "draw_size",               "w_is_tallest"
 )]
 
 # Create connection to the cleaned matches collection
