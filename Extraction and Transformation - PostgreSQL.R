@@ -116,10 +116,10 @@ colnames(matches) <- gsub("loser", "second_player", colnames(matches))
 winner_cols <- matches[, grep("first_player", colnames(matches))]
 loser_cols  <- matches[, grep("second_player", colnames(matches))]
 
-# Duplicate dataframe for inverted results
+# Duplicate dataframe for swapped results
 matchesInverted <- matches
 
-# Invert results
+# Swap winner and loser columns
 for (name_second in colnames(loser_cols)){
   name_first <- gsub("second_player", "first_player", name_second)
   matchesInverted[,name_first] <- loser_cols[,name_second]
@@ -132,8 +132,8 @@ for (name_first in colnames(winner_cols)){
 
 rm(loser_cols, winner_cols, name_first, name_second)
 
-# Intersect the rows of the previous dataset with the ones of the inverted one.
-# The row as it came will appear first. The duplicated and inverted will be just below.
+# Intersect the rows of the previous dataset with the ones of the swapped one.
+# The row as it came will appear first. The duplicated and swapped will be just below.
 n <- nrow(matches)
 matches <- rbind(matches, matchesInverted)
 matches <- matches[kronecker(1:n, c(0, n), "+"), ]
