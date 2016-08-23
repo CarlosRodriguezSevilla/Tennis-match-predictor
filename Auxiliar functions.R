@@ -54,7 +54,7 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   DFPlot <- t(DFPlot)
   colnames(DFPlot) <- seq(0.05,1,by = 0.05)
   barplot(DFPlot, 
-          col= c("green","red"), 
+          col= c("#33ff66","#ff3333"), 
           main = "Real value == 1", 
           xlab = "Predicted probability",
           ylab = "Number of observations"
@@ -63,7 +63,7 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
          inset = c(0, 0), 
          legend = rownames(DFPlot), 
          cex = 1.5, 
-         fill=c("green","red")
+         fill=c("#33ff66","#ff3333")
          )
   
   
@@ -80,7 +80,7 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   DFPlot <- t(DFPlot)
   colnames(DFPlot) <- seq(0.05,1,by = 0.05)
   barplot(DFPlot,
-          col= c("red","green"), 
+          col= c("#ff3333","#33ff66"), 
           main = "Real value == 0", 
           xlab = "Predicted probability",
           ylab = "Number of observations"
@@ -89,7 +89,7 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
          inset = c(0, 0), 
          legend = rownames(DFPlot), 
          cex = 1.5, 
-         fill=c("red","green")
+         fill=c("#ff3333","#33ff66")
          )
   
   
@@ -115,7 +115,7 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   DFPlot <- t(DFPlot)
   colnames(DFPlot) <- seq(0.05,1,by = 0.05)
   barplot(DFPlot, 
-          col= c("green","red"), 
+          col= c("#33ff66","#ff3333"), 
           main = "Hits vs Mistakes (Percentage)", 
           xlab = "Predicted probability",
           ylab = "Percentage"
@@ -124,7 +124,7 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
          inset = c(0.07, 0.25), 
          legend = rownames(DFPlot), 
          cex = 2, 
-         fill=c("green","red")
+         fill=c("#33ff66","#ff3333")
          )
   
   dev.off()
