@@ -15,6 +15,8 @@ filenames <- list.files(paste0(path, "/tennis_atp-master"),
                         full.names=TRUE
 )
 
+matches <- data.frame()
+
 # Bind all datasets to create a sigle one
 for (i in 1:length(filenames))
 {
@@ -32,8 +34,7 @@ for (i in 1:length(filenames))
   if(!exists("matches"))
   {
     matches <- dataset
-  }
-  else
+  } else
   {
     matches <- rbind(matches, dataset)
   }
@@ -109,3 +110,4 @@ matches <- matches[c(
 )]
 
 save(matches, file=paste0(path, "/Matches-clean.RData"))
+

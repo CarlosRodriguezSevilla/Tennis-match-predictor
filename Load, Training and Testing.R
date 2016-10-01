@@ -52,9 +52,12 @@ if(onMongoDB==T)
   
   # Creates a connection to the PostgreSQL database
   con <- dbConnect(
-    drv, dbname = "tennis",
-    host = "localhost", port = 5432,
-    user = "tennispredictor", password = pw
+    drv = drv, 
+    dbname = "tennis",
+    host = "localhost", 
+    port = 5432,
+    user = "tennispredictor", 
+    password = pw
   )
   rm(pw) # removes the password
   

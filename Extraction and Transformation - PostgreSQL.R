@@ -23,9 +23,12 @@ drv <- dbDriver("PostgreSQL")
 
 # Creates a connection to the PostgreSQL database
 con <- dbConnect(
-  drv, dbname = "tennis",
-  host = "localhost", port = 5432,
-  user = "tennispredictor", password = pw
+  drv = drv, 
+  dbname = "tennis",
+  host = "localhost",
+  port = 5432,
+  user = "tennispredictor", 
+  password = pw
 )
 rm(pw) # removes the password
 
@@ -98,7 +101,7 @@ matches <- dbGetQuery(con, "SELECT * from matches_raw")
 # TRANSFORMATION
 
 # Extract the year of the game from the 'tourney_date' field
-matches$tourney_date  <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
+# matches$tourney_date  <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
 matches$tourney_year  <- as.numeric(format(matches$tourney_date,'%Y'))
 matches$tourney_month <- as.numeric(format(matches$tourney_date,'%m'))
 
