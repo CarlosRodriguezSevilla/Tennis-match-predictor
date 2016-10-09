@@ -58,13 +58,13 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
           main = "Real value == 1", 
           xlab = "Predicted probability",
           ylab = "Number of observations"
-          )
+  )
   legend("topright", 
          inset = c(0, 0), 
          legend = rownames(DFPlot), 
          cex = 1.5, 
          fill=c("#33ff66","#ff3333")
-         )
+  )
   
   
   
@@ -84,18 +84,19 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
           main = "Real value == 0", 
           xlab = "Predicted probability",
           ylab = "Number of observations"
-          )
+  )
   legend("topright", 
          inset = c(0, 0), 
          legend = rownames(DFPlot), 
          cex = 1.5, 
          fill=c("#ff3333","#33ff66")
-         )
+  )
   
   
   
   # Hits vs Mistakes
   DFPlot <- data.frame()
+  Occurrences <- vector() 
   count <- 1
   for(p in seq(0.05,1,by = 0.05)){
     DFPlot[count, "Hits"] <- nrow(DF[DF$ypred == 1 & DF$ytest == 1 & DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,])
@@ -109,23 +110,28 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
     DFPlot[count, "Hits"]     <- DFPlot[count, "Hits"]     / Total
     DFPlot[count, "Mistakes"] <- DFPlot[count, "Mistakes"] / Total
     
+    Occurrences[count] <- ( nrow(DF[DF$ypredProb >= (p-0.05) & DF$ypredProb <= p ,]) / nrow(DF) ) * 100 
+    Occurrences[count] <- round(Occurrences[count], digits = 1)
+    
     count <- count+1
   }
   
   DFPlot <- t(DFPlot)
   colnames(DFPlot) <- seq(0.05,1,by = 0.05)
-  barplot(DFPlot, 
-          col= c("#33ff66","#ff3333"), 
-          main = "Hits vs Mistakes (Percentage)", 
-          xlab = "Predicted probability",
-          ylab = "Percentage"
-          )
-  legend("bottomright", 
-         inset = c(0.07, 0.25), 
-         legend = rownames(DFPlot), 
-         cex = 2, 
-         fill=c("#33ff66","#ff3333")
-         )
+  bp <- barplot(DFPlot, 
+                col= c("#33ff66","#ff3333"), 
+                main = "Hits vs Mistakes (Percentage)", 
+                xlab = "Predicted probability",
+                ylab = "Percentage",
+                ylim = c(0,1.1)
+  )
+  text(x = bp, y = 1.02, label=Occurrences, pos = 3, las=2)
+  # legend("bottomright", 
+  #        inset = c(0.07, 0.25), 
+  #        legend = rownames(DFPlot), 
+  #        cex = 2, 
+  #        fill=c("#33ff66","#ff3333")
+  #        )
   
   dev.off()
 }

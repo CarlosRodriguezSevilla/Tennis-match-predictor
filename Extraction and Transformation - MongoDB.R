@@ -63,7 +63,7 @@ matches$tourney_date  <- as.Date(as.character(matches$tourney_date),format="%Y%m
 matches$tourney_year  <- as.numeric(format(matches$tourney_date,'%Y'))
 matches$tourney_month <- as.numeric(format(matches$tourney_date,'%m'))
 
-# Convert names to characters.
+# Convert names to characters. Not necessary here. Already characters
 # Were they left as factors, troubles would arise due to new levels
 # matches$winner_name <- as.character(matches$winner_name)
 # matches$loser_name <- as.character(matches$loser_name)
