@@ -101,7 +101,7 @@ matches <- dbGetQuery(con, "SELECT * from matches_raw")
 # TRANSFORMATION
 
 # Extract the year of the game from the 'tourney_date' field
-# matches$tourney_date  <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
+matches$tourney_date  <- as.Date(as.character(matches$tourney_date),format="%Y-%m-%d")
 matches$tourney_year  <- as.numeric(format(matches$tourney_date,'%Y'))
 matches$tourney_month <- as.numeric(format(matches$tourney_date,'%m'))
 
