@@ -5,13 +5,13 @@ library(RPostgreSQL)
 library(dplyr)
 library(tidyr)
 
-source("Config.R") # Load config file with root path, etc
+source("src/Config.R") # Load config file with root path, etc
 
 
 # EXTRACTION
 
 # Load every filename of datasets
-filenames <- list.files(paste0(path, "/tennis_atp-master"), 
+filenames <- list.files("dat", 
                         pattern="atp_matches_[0-9]{4}", 
                         full.names=TRUE
 )

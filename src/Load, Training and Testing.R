@@ -14,67 +14,70 @@ library(randomForest)
 library(ROCR)
 library(gplots)
 
-source("Config.R") # Load config file with root path, etc
-source("Auxiliar functions.R")
+source(file = "src/Config.R") # Load config file with root path, etc
+source(file = "src/Auxiliar functions.R")
 
 
 # LOAD
 
-if(onMongoDB==T)
-{
-  # Create connection to the cleaned matches collection
-  con <- mongo(
-    collection = "matches_clean", 
-    db = "tennis", 
-    url = "mongodb://localhost",
-    verbose = TRUE
-  )
-  
-  # Check data availability
-  if(con$count() == 0){
-    stop("No data available.") 
-  }
-  
-  # Fetch all the matches
-  matches <- con$find()
-  
-  # Close the connection
-  rm(con)
-  
-  warning("Dataset is loaded from MongoDB")
-  
-} else if(onPostgreSQL==T)
-{
-  pw <- { "tennispredictor" }
-  
-  # Loads the PostgreSQL driver
-  drv <- dbDriver("PostgreSQL")
-  
-  # Creates a connection to the PostgreSQL database
-  con <- dbConnect(
-    drv = drv, 
-    dbname = "tennis",
-    host = "localhost", 
-    port = 5432,
-    user = "tennispredictor", 
-    password = pw
-  )
-  rm(pw) # removes the password
-  
-  # Fetch all the matches
-  matches <- dbGetQuery(con, "SELECT * from matches_clean")
-  
-  # Close the connection
-  dbDisconnect(con)
-  dbUnloadDriver(drv)
-  
-  warning("Dataset is loaded from PostgreSQL")
-  
-} else 
-{
-  load(paste0(path, "/Matches-clean.RData"))
-  warning("Dataset is loaded from RData")
-}
+switch(data_source,
+       
+       "MongoDB"={
+         # Create connection to the cleaned matches collection
+         con <- mongo(
+           collection = "matches_clean", 
+           db = "tennis", 
+           url = "mongodb://localhost",
+           verbose = TRUE
+         )
+         
+         # Check data availability
+         if(con$count() == 0){
+           stop("No data available.") 
+         }
+         
+         # Fetch all the matches
+         matches <- con$find()
+         
+         # Close the connection
+         rm(con)
+         
+         warning("Dataset is loaded from MongoDB")
+       },
+       
+       "PosrgreSQL"={
+         pw <- { "tennispredictor" }
+         
+         # Loads the PostgreSQL driver
+         drv <- dbDriver("PostgreSQL")
+         
+         # Creates a connection to the PostgreSQL database
+         con <- dbConnect(
+           drv = drv, 
+           dbname = "tennis",
+           host = "localhost", 
+           port = 5432,
+           user = "tennispredictor", 
+           password = pw
+         )
+         rm(pw) # removes the password
+         
+         # Fetch all the matches
+         matches <- dbGetQuery(con, "SELECT * from matches_clean")
+         
+         # Close the connection
+         dbDisconnect(con)
+         dbUnloadDriver(drv)
+         
+         warning("Dataset is loaded from PostgreSQL")
+         
+       },
+       
+       "R"={
+         load(file = "rda/Matches-clean.RData")
+         warning("Dataset is loaded from RData")
+       })
+
 
 # Convert to factor where needed
 matches$surface             <- as.factor(matches$surface)
@@ -143,7 +146,7 @@ predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_tallest"])
 
 
 # Save and delete the models
-save(svmModel, adaModel, rfsModel, file=paste0(path, "/Models.RData"))
+save(svmModel, adaModel, rfsModel, file="rda/Models.RData")
 rm(svmModel, adaModel, rfsModel)
 
 
