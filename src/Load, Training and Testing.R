@@ -42,7 +42,7 @@ switch(data_source,
          # Close the connection
          rm(con)
          
-         warning("Dataset is loaded from MongoDB")
+         message("Dataset is loaded from MongoDB")
        },
        
        "PosrgreSQL"={
@@ -69,13 +69,13 @@ switch(data_source,
          dbDisconnect(con)
          dbUnloadDriver(drv)
          
-         warning("Dataset is loaded from PostgreSQL")
+         message("Dataset is loaded from PostgreSQL")
          
        },
        
        "R"={
          load(file = "rda/Matches-clean.RData")
-         warning("Dataset is loaded from RData")
+         message("Dataset is loaded from RData")
        })
 
 
