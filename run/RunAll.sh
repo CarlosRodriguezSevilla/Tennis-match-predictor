@@ -13,29 +13,41 @@ echo "Running Tennis Match Predictor"
 # R CMD BATCH ../src/ExtractionAndTransformation-R.R ../out/R/ExtractionAndTransformation-R.Rout
 ( 
   if R CMD BATCH "${args}" ../src/ExtractionAndTransformation-R.R ../out/R/ExtractionAndTransformation-R.Rout ; then
-    echo "R done"
+    echo -e "\tR done"
   else
-    echo "R FAILED"
+    echo -e "\tR FAILED"
   fi 
 ) & 
 
 # R CMD BATCH ../src/ExtractionAndTransformation-PostgreSQL.R ../out/R/ExtractionAndTransformation-PostgreSQL.Rout
 ( 
   if R CMD BATCH "${args}" ../src/ExtractionAndTransformation-PostgreSQL.R ../out/PostgreSQL/ExtractionAndTransformation-PostgreSQL.Rout ; then 
-    echo "PostgreSQL done"
+    echo -e "\tPostgreSQL done"
   else
-    echo "PostgreSQL FAILED"
+    echo -e "\tPostgreSQL FAILED"
   fi 
 ) & 
 
 # R CMD BATCH ../src/ExtractionAndTransformation-MongoDB.R ../out/R/ExtractionAndTransformation-MongoDB.Rout
 ( 
   if R CMD BATCH "${args}" ../src/ExtractionAndTransformation-MongoDB.R ../out/MongoDB/ExtractionAndTransformation-MongoDB.Rout ; then 
-    echo "MongoDB done"
+    echo -e "\tMongoDB done"
   else
-    echo "MongoDB FAILED"
+    echo -e "\tMongoDB FAILED"
   fi 
 ) &
 
 wait
+echo -e "\t--------------"
+
+
+# R CMD BATCH ../src/LoadTrainingAndTesting.R ../out/LoadTrainingAndTesting.Rout
+( 
+  if R CMD BATCH "${args}" ../src/LoadTrainingAndTesting.R ../out/LoadTrainingAndTesting.Rout ; then 
+    echo -e "\tLoad, Training and Testing done"
+  else
+    echo -e "\tLoad, Training and Testing FAILED"
+  fi 
+)
+
 echo "DONE"

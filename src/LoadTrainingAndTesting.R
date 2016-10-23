@@ -1,5 +1,15 @@
 
-rm(list=ls(all = TRUE)) # Clear workspace
+
+args=(commandArgs(trailingOnly = TRUE))
+
+if(length(args)>0){
+  for(i in 1:length(args)){
+    eval(parse(text=args[[i]]))
+  } 
+}
+
+setwd(path)
+rm(list=ls()) # Clear workspace
 
 library(RPostgreSQL)
 library(mongolite)
