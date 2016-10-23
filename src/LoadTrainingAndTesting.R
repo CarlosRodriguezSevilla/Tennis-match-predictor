@@ -15,7 +15,7 @@ library(ROCR)
 library(gplots)
 
 source(file = "src/Config.R") # Load config file with root path, etc
-source(file = "src/Auxiliar functions.R")
+source(file = "src/AuxiliarFunctions.R")
 
 
 # LOAD

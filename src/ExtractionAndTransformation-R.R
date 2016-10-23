@@ -1,11 +1,20 @@
 
+
+args=(commandArgs(trailingOnly = TRUE))
+
+if(length(args)>0){
+  for(i in 1:length(args)){
+    eval(parse(text=args[[i]]))
+  } 
+}
+
+setwd(path)
 rm(list=ls()) # Clear workspace
 
-library(mongolite)
 library(dplyr)
 library(tidyr)
 
-source("src/Config.R") # Load config file with root path, etc
+# source(file = "src/Config.R") # Load config file with root path, etc
 
 
 # EXTRACTION
@@ -16,20 +25,9 @@ filenames <- list.files("dat",
                         full.names=TRUE
 )
 
-# Create collection of raw matches
-con <- mongo(
-  collection = "matches_raw", 
-  db = "tennis", 
-  url = "mongodb://localhost",
-  verbose = TRUE
-)
+matches <- data.frame()
 
-# Empty collection
-if(con$count() > 0){
-  con$remove(query = "{}", multiple=T)  
-}
-
-# Add csvs to collection
+# Bind all datasets to create a sigle one
 for (i in 1:length(filenames))
 {
   dataset <- read.csv(filenames[i])
@@ -43,30 +41,29 @@ for (i in 1:length(filenames))
     dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
   }
   
-  # Insert raw data
-  con$insert(dataset)
+  if(!exists("matches"))
+  {
+    matches <- dataset
+  } else
+  {
+    matches <- rbind(matches, dataset)
+  }
   
 }
 rm(i, filenames, dataset)
 
-# Fetch all the matches
-matches <- con$find()
 
-# Close the connection
-rm(con)
-
-
-# TRANSFORMATION
+# TRANSFORMATION    
 
 # Extract the year of the game from the 'tourney_date' field
 matches$tourney_date  <- as.Date(as.character(matches$tourney_date),format="%Y%m%d")
 matches$tourney_year  <- as.numeric(format(matches$tourney_date,'%Y'))
 matches$tourney_month <- as.numeric(format(matches$tourney_date,'%m'))
 
-# Convert names to characters. Not necessary here. Already characters
+# Convert names to characters.
 # Were they left as factors, troubles would arise due to new levels
-# matches$winner_name <- as.character(matches$winner_name)
-# matches$loser_name <- as.character(matches$loser_name)
+matches$winner_name <- as.character(matches$winner_name)
+matches$loser_name <- as.character(matches$loser_name)
 
 # Replicate every single row swapping winner columns for loser columns. 
 # Rename column names
@@ -122,22 +119,5 @@ matches <- matches[c(
   "best_of",               "round",                      "draw_size",               "w_is_tallest"
 )]
 
-# Create connection to the cleaned matches collection
-con <- mongo(
-  collection = "matches_clean", 
-  db = "tennis", 
-  url = "mongodb://localhost",
-  verbose = TRUE
-)
+save(matches, file="rda/Matches-clean.RData")
 
-# Remove collection if not empty
-if(con$count() > 0){
-  con$remove(query = "{}", multiple=T)  
-}
-
-# Insert the cleaned data
-con$insert(matches)
-rm(matches)
-
-# Close the connection
-rm(con)

@@ -1,6 +1,6 @@
 
-path <- "/home/kako/Dev/Data challenges/Tennis"
-setwd(path)
+# path <- "/home/kako/Dev/Data_challenges/Tennis"
+# setwd(path)
 
 # data_source <- "MongoDB"
 # data_source <- "PostgreSQL"
