@@ -55,7 +55,7 @@ switch(data_source,
          message("Dataset is loaded from MongoDB")
        },
        
-       "PosrgreSQL"={
+       "PostgreSQL"={
          pw <- { "tennispredictor" }
          
          # Loads the PostgreSQL driver
