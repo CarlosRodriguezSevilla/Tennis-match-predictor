@@ -1,5 +1,5 @@
 
-
+rm(list=ls()) # Clear workspace
 args=(commandArgs(trailingOnly = TRUE))
 
 if(length(args)>0){
@@ -9,12 +9,9 @@ if(length(args)>0){
 }
 
 setwd(path)
-rm(list=ls()) # Clear workspace
 
 library(dplyr)
 library(tidyr)
-
-# source(file = "src/Config.R") # Load config file with root path, etc
 
 
 # EXTRACTION

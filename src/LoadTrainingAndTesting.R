@@ -1,5 +1,5 @@
 
-
+rm(list=ls()) # Clear workspace
 args=(commandArgs(trailingOnly = TRUE))
 
 if(length(args)>0){
@@ -9,7 +9,6 @@ if(length(args)>0){
 }
 
 setwd(path)
-rm(list=ls()) # Clear workspace
 
 library(RPostgreSQL)
 library(mongolite)
@@ -24,7 +23,6 @@ library(randomForest)
 library(ROCR)
 library(gplots)
 
-source(file = "src/Config.R") # Load config file with root path, etc
 source(file = "src/AuxiliarFunctions.R")
 
 
@@ -86,7 +84,11 @@ switch(data_source,
        "R"={
          load(file = "rda/Matches-clean.RData")
          message("Dataset is loaded from RData")
-       })
+       },
+       
+       stop(paste0("Illegal argument 'source': ", source, 
+                   ". \nNot one of 'PostgreSQL', 'MongoDB' or 'R'."))
+)
 
 
 # Convert to factor where needed
