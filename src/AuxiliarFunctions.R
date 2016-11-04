@@ -19,7 +19,9 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   
   # Classification
   performance <- performance(prediction, "tpr", "fpr")
-  tableModel <- table(PREDICTION = ypred, TRUTH = ytest)
+  tableModel  <- table(PREDICTION = ypred, TRUTH = ytest)
+  accuracy    <- ( tableModel[1,1] + tableModel[2,2] ) / length(ytest)
+  accuracy    <- round(accuracy, 2)
   
   # Plot
   png(filename = paste0("out/", resultsPath, name, ".png"), width = 768, height = 1024)
@@ -35,8 +37,13 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   par(mai=c(1.02,0.82,0.82,0.42)) # mai = c(bottom, left, top, right) 
   
   # Confusion Matrix
-  textplot(tableModel, cex = 1.5)
-  title(ylab="Prediction", xlab="Truth", main = "Confusion Matrix", outer = FALSE)
+  textplot(
+    kable(
+      list(tableModel, 
+           paste0("Accuracy: ",accuracy)), 
+      format = "pandoc"),
+    cex=2.25
+  )
   
   # Barplots
   DF <- data.frame(ytest     = as.numeric(as.logical(ytest)), 

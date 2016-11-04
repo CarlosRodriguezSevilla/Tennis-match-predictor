@@ -22,6 +22,7 @@ library(randomForest)
 
 library(ROCR)
 library(gplots)
+library(knitr)
 
 source(file = "src/AuxiliarFunctions.R")
 
