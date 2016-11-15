@@ -1,5 +1,9 @@
 
 
+get_timing <- function(end_time, init_time){
+  return(as.numeric(difftime(end_time, init_time), units="secs"))
+}
+
 plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   
   switch (data_source,
