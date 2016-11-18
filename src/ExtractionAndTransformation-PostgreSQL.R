@@ -110,6 +110,7 @@ rm(i, filenames, dataset)
 # Fetch all the matches
 matches <- dbGetQuery(con, "SELECT * from matches_raw")
 
+timing_results$extraction_done <- get_timing(Sys.time(), init_time)
 
 # TRANSFORMATION
 

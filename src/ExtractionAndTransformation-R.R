@@ -9,10 +9,16 @@ if(length(args)>0){
 }
 
 setwd(path)
+timing_results <- list()
+
+init_time <- Sys.time()
 
 library(dplyr)
 library(tidyr)
 
+source(file = "src/AuxiliarFunctions.R")
+
+timing_results$loaded_libraries <- get_timing(Sys.time(), init_time)
 
 # EXTRACTION
 
@@ -49,6 +55,7 @@ for (i in 1:length(filenames))
 }
 rm(i, filenames, dataset)
 
+timing_results$extraction_done <- get_timing(Sys.time(), init_time)
 
 # TRANSFORMATION    
 

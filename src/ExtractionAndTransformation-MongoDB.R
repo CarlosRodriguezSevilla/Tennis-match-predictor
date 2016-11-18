@@ -9,11 +9,17 @@ if(length(args)>0){
 }
 
 setwd(path)
+timing_results <- list()
+
+init_time <- Sys.time()
 
 library(mongolite)
 library(dplyr)
 library(tidyr)
 
+source(file = "src/AuxiliarFunctions.R")
+
+timing_results$loaded_libraries <- get_timing(Sys.time(), init_time)
 
 # EXTRACTION
 
@@ -62,6 +68,7 @@ matches <- con$find()
 # Close the connection
 rm(con)
 
+timing_results$extraction_done <- get_timing(Sys.time(), init_time)
 
 # TRANSFORMATION
 
