@@ -4,26 +4,34 @@ get_timing <- function(end_time, init_time){
   return(as.numeric(difftime(end_time, init_time), units="secs"))
 }
 
-write_results <- function(results, data_source){
-  
+write_results <- function(results, path, data_source){
+  dest_folder <- paste(path, "out", data_source, sep="/")
+  dest_file   <- paste(data_source, ".csv",      sep="")
+  dest_file   <- paste(dest_folder, dest_file,   sep="/")
+  if(!file.exists(dest_file)){ # The file does not exist yet
+    write.table(x = results, 
+                file = dest_file,
+                row.names=F, 
+                na="NA", 
+                quote= FALSE, 
+                sep=";", 
+                col.names=T)
+  } else{ # The file already exists
+    write.table(x = results, 
+                file = dest_file, 
+                row.names=F, 
+                na="NA", 
+                append=T, 
+                quote= FALSE, 
+                sep=";", 
+                col.names=F)
+  }
 }
 
 plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   
-  switch (data_source,
-          "MongoDB" = {
-            resultsPath <- "MongoDB/"
-          },
-          "PostgreSQL" = {
-            resultsPath <- "PostgreSQL/"
-          },
-          "R" = {
-            resultsPath <- "R/"
-          }
-  )
-  
   # Create the results folder if it does not already exists
-  dir.create(paste0('out/', resultsPath), showWarnings = F)
+  dir.create(paste0('out/', data_source), showWarnings = F)
   
   # Classification
   performance <- performance(prediction, "tpr", "fpr")
@@ -32,7 +40,10 @@ plotModel <- function(name, prediction, ypred, ypredProb, ytest){
   accuracy    <- round(accuracy, 2)
   
   # Plot
-  png(filename = paste0("out/", resultsPath, name, ".png"), width = 768, height = 1024)
+  dest_folder <- paste(path, "out", data_source, sep="/")
+  dest_file   <- paste(name, ".png",             sep="")
+  dest_file   <- paste(dest_folder, dest_file,   sep="/")
+  png(filename = dest_file, width = 768, height = 1024)
   # par(mfrow=c(2,2), mai=c(1.5,1,2.25,1)) # mai = c(bottom, left, top, right) 
   layout(matrix(c(1,2,3,4,5,5), 3, 2, byrow = TRUE))
   

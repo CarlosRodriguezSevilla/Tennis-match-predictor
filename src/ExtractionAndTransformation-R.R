@@ -123,5 +123,13 @@ matches <- matches[c(
   "best_of",               "round",                      "draw_size",               "w_is_tallest"
 )]
 
+timing_results$transformation_done <- get_timing(Sys.time(), init_time)
+
 save(matches, file="rda/Matches-clean.RData")
+rm(matches)
+
+timing_results$insertion_done <- get_timing(Sys.time(), init_time)
+timing_results$end_time   <- get_timing(Sys.time(), init_time)
+
+write_results(results = timing_results, path = path, data_source = "R")
 

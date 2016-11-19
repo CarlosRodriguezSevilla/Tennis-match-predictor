@@ -178,6 +178,8 @@ matches <- matches[c(
   "best_of",               "round",                      "draw_size",               "w_is_tallest"
 )]
 
+timing_results$transformation_done <- get_timing(Sys.time(), init_time)
+
 # Delete clean matches table if it already exists
 if ( dbExistsTable(con, "matches_clean") ){
   dbRemoveTable(con, "matches_clean")
@@ -214,6 +216,12 @@ dbWriteTable(
 )
 rm(matches)
 
+timing_results$insertion_done <- get_timing(Sys.time(), init_time)
+
 # Close the connection
 dbDisconnect(con)
 dbUnloadDriver(drv)
+
+timing_results$end_time <- get_timing(Sys.time(), init_time)
+
+write_results(results = timing_results, path = path, data_source = "PostgreSQL")
