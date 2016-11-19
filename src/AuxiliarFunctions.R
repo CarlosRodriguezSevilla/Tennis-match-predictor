@@ -6,7 +6,10 @@ get_timing <- function(end_time, init_time){
 
 write_results <- function(results, path, data_source){
   dest_folder <- paste(path, "out", data_source, sep="/")
-  dest_file   <- paste(data_source, ".csv",      sep="")
+  dest_file   <- ifelse(
+    test = (data_source %in% c("R", "MongoDB", "PostgreSQL")), 
+    yes  = paste("ExtractionAndTransformation-", data_source, ".csv", sep=""), 
+    no   = paste(data_source, ".csv", sep=""))
   dest_file   <- paste(dest_folder, dest_file,   sep="/")
   if(!file.exists(dest_file)){ # The file does not exist yet
     write.table(x = results, 
@@ -14,7 +17,7 @@ write_results <- function(results, path, data_source){
                 row.names=F, 
                 na="NA", 
                 quote= FALSE, 
-                sep=";", 
+                sep=",", 
                 col.names=T)
   } else{ # The file already exists
     write.table(x = results, 
@@ -23,12 +26,12 @@ write_results <- function(results, path, data_source){
                 na="NA", 
                 append=T, 
                 quote= FALSE, 
-                sep=";", 
+                sep=",", 
                 col.names=F)
   }
 }
 
-plotModel <- function(name, prediction, ypred, ypredProb, ytest){
+plotModel <- function(name, data_source, prediction, ypred, ypredProb, ytest){
   
   # Create the results folder if it does not already exists
   dir.create(paste0('out/', data_source), showWarnings = F)

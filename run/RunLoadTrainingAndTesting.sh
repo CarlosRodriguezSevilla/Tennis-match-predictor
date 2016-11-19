@@ -16,7 +16,7 @@ echo "Running Tennis Match Predictor, Load Training and Testing"
 
 # R CMD BATCH ../src/LoadTrainingAndTesting.R ../out/LoadTrainingAndTesting.Rout
 ( 
-  if R CMD BATCH "${args}" ../src/LoadTrainingAndTesting.R ../out/LoadTrainingAndTesting.Rout ; then 
+  if R CMD BATCH "${args}" ../src/LoadTrainingAndTesting.R ../out/LoadTrainingAndTesting/LoadTrainingAndTesting.Rout ; then 
     echo -e "[$(date +%H:%M)]" "\t\t- Load, Training and Testing done"
   else
     echo -e "[$(date +%H:%M)]" "\t\t- Load, Training and Testing FAILED"

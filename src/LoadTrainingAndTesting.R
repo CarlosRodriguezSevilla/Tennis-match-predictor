@@ -9,6 +9,9 @@ if(length(args)>0){
 }
 
 setwd(path)
+timing_results <- list(data_source=data_source)
+init_time <- Sys.time()
+
 
 library(RPostgreSQL)
 library(mongolite)
@@ -166,6 +169,7 @@ rm(svmModel, adaModel, rfsModel)
 # Results
 plotModel(
   name        = "SVM", 
+  data_source = data_source,
   prediction  = predSVM,
   ypred       = ypredSVM, 
   ypredProb   = ypredProbSVM, 
@@ -174,6 +178,7 @@ plotModel(
 
 plotModel(
   name        = "AdaBoost", 
+  data_source = data_source,
   prediction  = predADA,
   ypred       = ypredADA, 
   ypredProb   = ypredProbADA, 
@@ -182,8 +187,12 @@ plotModel(
 
 plotModel(
   name        = "Random Forest", 
+  data_source = data_source,
   prediction  = predRFS,
   ypred       = ypredRFS, 
   ypredProb   = ypredProbRFS, 
   ytest       = na.omit(test)[["w_is_tallest"]]
 )
+
+timing_results$end_time <- get_timing(Sys.time(), init_time)
+write_results(results = timing_results, path = path, data_source = "LoadTrainingAndTesting")

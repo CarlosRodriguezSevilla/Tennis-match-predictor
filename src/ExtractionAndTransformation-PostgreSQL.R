@@ -10,7 +10,6 @@ if(length(args)>0){
 
 setwd(path)
 timing_results <- list()
-
 init_time <- Sys.time()
 
 library(RPostgreSQL)

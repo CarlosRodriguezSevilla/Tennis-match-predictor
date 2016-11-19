@@ -10,7 +10,6 @@ if(length(args)>0){
 
 setwd(path)
 timing_results <- list()
-
 init_time <- Sys.time()
 
 library(dplyr)
@@ -44,13 +43,7 @@ for (i in 1:length(filenames))
     dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
   }
   
-  if(!exists("matches"))
-  {
-    matches <- dataset
-  } else
-  {
-    matches <- rbind(matches, dataset)
-  }
+  matches <- rbind(matches, dataset)
   
 }
 rm(i, filenames, dataset)
