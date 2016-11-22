@@ -14,6 +14,8 @@ init_time <- Sys.time()
 
 library(dplyr)
 library(tidyr)
+library(doParallel)
+library(doSNOW)
 
 source(file = "src/AuxiliarFunctions.R")
 
@@ -27,11 +29,12 @@ filenames <- list.files("dat",
                         full.names=TRUE
 )
 
-matches <- data.frame()
-
 # Bind all datasets to create a sigle one
-for (i in 1:length(filenames))
-{
+no_cores <- detectCores()
+cl1      <- makeCluster(no_cores)
+registerDoSNOW(cl1)
+
+matches <- foreach(i=1:length(filenames), .combine = rbind) %dopar% {
   dataset <- read.csv(filenames[i])
   
   # Was the winner the tallest player? (response variable)
@@ -43,10 +46,11 @@ for (i in 1:length(filenames))
     dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
   }
   
-  matches <- rbind(matches, dataset)
-  
+  return(dataset)
+
 }
-rm(i, filenames, dataset)
+stopCluster(cl1)
+rm(i, filenames, dataset, no_cores, cl1)
 
 timing_results$extraction_done <- get_timing(Sys.time(), init_time)
 
