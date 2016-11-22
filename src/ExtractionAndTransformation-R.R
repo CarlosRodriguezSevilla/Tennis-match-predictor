@@ -50,7 +50,7 @@ matches <- foreach(i=1:length(filenames), .combine = rbind) %dopar% {
 
 }
 stopCluster(cl1)
-rm(i, filenames, dataset, no_cores, cl1)
+rm(filenames, no_cores, cl1)
 
 timing_results$extraction_done <- get_timing(Sys.time(), init_time)
 
