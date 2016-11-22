@@ -42,8 +42,8 @@ if(con$count() > 0){
 }
 
 # Add csvs to collection
-for (i in 1:length(filenames))
-{
+for (i in 1:length(filenames)){
+  
   dataset <- read.csv(filenames[i])
   
   # Was the winner the tallest player? (response variable)
