@@ -83,8 +83,8 @@ dbGetQuery(con, sql_command)
 rm(sql_command)
 
 # Add csvs to the matches table
-for (i in 1:length(filenames))
-{
+for (i in 1:length(filenames)){
+  
   dataset <- read.csv(filenames[i])
   
   # Was the winner the tallest player? (response variable)
