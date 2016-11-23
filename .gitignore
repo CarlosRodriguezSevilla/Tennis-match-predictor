@@ -24,4 +24,5 @@ vignettes/*.pdf
 *.Rproj
 
 Help/
+doc/
 .Rproj.user
