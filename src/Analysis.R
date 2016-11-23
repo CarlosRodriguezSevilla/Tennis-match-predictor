@@ -10,6 +10,7 @@ if(length(args)>0){
 
 setwd(path)
 
+library(ggplot2)
 
 # Read data
 
@@ -43,41 +44,46 @@ default_mar <- par("mar")
 
 png(filename = "out/LTT.png", width=800)
 ggplot(LoadTrainingAndTesting_csv, aes(x=data_source, y=end_time, fill=data_source)) + 
-  geom_boxplot() +
-  scale_x_discrete(name ="Data source") + 
-  scale_y_discrete(name ="Seconds") + 
+  geom_boxplot() + 
+  ggtitle("Load, Training and Testing") +
+  xlab(label ="Data source") + 
+  ylab(label = "Seconds") +
   theme(legend.title = element_text(size = 20),
-        legend.text  = element_text(size = 25))
+        legend.text  = element_text(size = 25), 
+        plot.title        = element_text(size = 25, hjust = 0.5))
 dev.off()
 
 png(filename = "out/r_csv.png")
-par(mar=default_mar + c(4,0,0,0))
+par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = r_csv, FUN = mean), 
         main = "R",
         ylab = "seconds",
         ylim = c(0,30),
         col = cols[1],
-        las    = 2)
+        las    = 2,
+        border = NA)
 dev.off()
 
 png(filename = "out/mongodb_csv.png")
-par(mar=default_mar + c(4,0,0,0))
+par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = mongodb_csv, FUN = mean), 
         main = "MongoDB",
         ylab = "seconds",
         ylim = c(0,30),
         col = cols[3],
-        las    = 2)
+        las    = 2,
+        border = NA)
 dev.off()
 
 png(filename = "out/postgresql_csv.png")
-par(mar=default_mar + c(4,0,0,0))
+par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = postgresql_csv, FUN = mean), 
         main = "PostgreSQL",
         ylab = "seconds",
         ylim = c(0,30),
         col = cols[2],
-        las    = 2)
+        las    = 2,
+        border = NA)
 dev.off()
 
 mean_data <- data.frame(R=sapply(X = r_csv,          FUN = mean))
