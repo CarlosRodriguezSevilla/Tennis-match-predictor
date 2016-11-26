@@ -5,6 +5,15 @@ get_timing <- function(end_time, init_time){
 }
 
 write_results <- function(results, path, data_source){
+  
+  results <- data.frame(results)
+  aux     <- results
+  
+  for(col in 2:ncol(results)){
+    aux[,col] <- results[,col] - results[,(col-1)]
+  } 
+  results <- aux
+  
   dest_folder <- paste(path, "out", data_source, sep="/")
   dest_file   <- ifelse(
     test = (data_source %in% c("R", "MongoDB", "PostgreSQL")), 
