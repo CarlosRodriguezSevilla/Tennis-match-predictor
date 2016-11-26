@@ -58,7 +58,7 @@ par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = r_csv, FUN = mean), 
         main = "R",
         ylab = "seconds",
-        ylim = c(0,30),
+        ylim = c(0,20),
         col = cols[1],
         las    = 2,
         border = NA)
@@ -69,7 +69,7 @@ par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = mongodb_csv, FUN = mean), 
         main = "MongoDB",
         ylab = "seconds",
-        ylim = c(0,30),
+        ylim = c(0,20),
         col = cols[3],
         las    = 2,
         border = NA)
@@ -80,7 +80,7 @@ par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = postgresql_csv, FUN = mean), 
         main = "PostgreSQL",
         ylab = "seconds",
-        ylim = c(0,30),
+        ylim = c(0,20),
         col = cols[2],
         las    = 2,
         border = NA)
