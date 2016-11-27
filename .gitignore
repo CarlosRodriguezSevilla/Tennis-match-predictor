@@ -7,6 +7,7 @@
 
 # RStudio files
 .Rproj.user/
+.Rproj.user
 
 # R CMD BATCH output files
 *.Rout
@@ -15,7 +16,7 @@
 vignettes/*.html
 vignettes/*.pdf
 
-
+Rplots.pdf
 
 # RData files
 *.RData
@@ -25,4 +26,3 @@ vignettes/*.pdf
 
 Help/
 doc/
-.Rproj.user

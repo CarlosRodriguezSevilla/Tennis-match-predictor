@@ -3,14 +3,19 @@
 # On exit silently kill all running subprocesses 
 trap "exec 3>&2; exec 2> /dev/null; pkill -P $$; exec 2>&3" EXIT
 
-if !([ "$#" -eq 2 ] && [ "$1" == "-source" ]); then
-  echo "Argument error"
-  exit 0
+if ([ "$#" -eq 2 ] && [ "$1" == "-source" ]); then
+  data_sources=(R PostgreSQL MongoDB)
+  data_source=$2
+  if ! [[ ${data_sources[*]} =~ (^|[[:space:]])$data_source($|[[:space:]]) ]]; then
+    echo "Argument error"; exit 0
+  fi
+else
+  echo "Argument error"; exit 0
 fi
 
 # Path
 path="$(dirname "$PWD")"
-args="--args path='/home/kako/Dev/Data_challenges/Tennis/' data_source='$2'"
+args="--args path='/home/kako/Dev/Data_challenges/Tennis/' data_source='$data_source'"
 
 echo "Running Tennis Match Predictor, Load Training and Testing"
 
