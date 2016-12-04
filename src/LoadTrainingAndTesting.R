@@ -29,6 +29,8 @@ library(knitr)
 
 source(file = "src/AuxiliarFunctions.R")
 
+timing_results$load_libraries <- get_timing(Sys.time(), init_time)
+
 
 # LOAD
 
@@ -94,21 +96,19 @@ switch(data_source,
                    ". \nNot one of 'PostgreSQL', 'MongoDB' or 'R'."))
 )
 
+timing_results$extraction_done <- get_timing(Sys.time(), init_time)
 
 # Convert to factor where needed
-matches$surface             <- as.factor(matches$surface)
-matches$draw_size           <- as.factor(matches$draw_size)
-matches$tourney_level       <- as.factor(matches$tourney_level)
-matches$best_of             <- as.factor(matches$best_of)
-matches$round               <- as.factor(matches$round)
-matches$w_is_tallest        <- as.factor(matches$w_is_tallest)
+to_factors <- c("surface", "draw_size", "tourney_level", "best_of", 
+                "round", "w_is_tallest", "first_player_entry", 
+                "second_player_entry", "first_player_hand", 
+                "second_player_hand", "first_player_seed", 
+                "second_player_seed")
 
-matches$first_player_entry  <- as.factor(matches$first_player_entry)
-matches$second_player_entry <- as.factor(matches$second_player_entry)
-matches$first_player_hand   <- as.factor(matches$first_player_hand)
-matches$second_player_hand  <- as.factor(matches$second_player_hand)
-matches$first_player_seed   <- as.factor(matches$first_player_seed)
-matches$second_player_seed  <- as.factor(matches$second_player_seed)
+for(column in to_factors){
+  matches[,column] <- as.factor(matches[,column])
+}
+
 
 
 # Sampling
@@ -123,6 +123,7 @@ rm(matches)
 
 rm(trainIndex)
 
+timing_results$sampling <- get_timing(Sys.time(), init_time)
 
 # TRAINING
 
@@ -135,30 +136,59 @@ svmModel <- ksvm(w_is_tallest~.,
                  kpar = "automatic",
                  prob.model = TRUE)
 
+timing_results$svm_training <- get_timing(Sys.time(), init_time)
+
 adaModel <- ada(w_is_tallest~.,
                 data=train,
                 type="real")
+
+timing_results$ada_training <- get_timing(Sys.time(), init_time)
 
 rfsModel <- randomForest(w_is_tallest~.,
                          data=train,
                          na.action=na.omit)
 
+timing_results$rfs_training <- get_timing(Sys.time(), init_time)
+
 # TESTING
 
+# Testing SVM
 # Predicted values (logical)
-ypredSVM <- predict(object = svmModel, test)
-ypredADA <- predict(object = adaModel, na.omit(test))
-ypredRFS <- predict(object = rfsModel, na.omit(test))
+ypredSVM <- predict(object = svmModel, test) 
 
 # Predicted values (probabilities)
 ypredProbSVM <- predict(object = svmModel, na.omit(test), type="prob")
-ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
-ypredProbRFS <- predict(object = rfsModel, na.omit(test), type="prob")
 
 # Prediction objects
 predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_tallest"])
+
+timing_results$svm_testing <- get_timing(Sys.time(), init_time)
+
+
+# Testing ADA
+# Predicted values (logical)
+ypredADA <- predict(object = adaModel, na.omit(test))
+
+# Predicted values (probabilities)
+ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
+
+# Prediction objects
 predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_tallest"])
+
+timing_results$ada_testing <- get_timing(Sys.time(), init_time)
+
+
+# Testing RFS
+# Predicted values (logical)
+ypredRFS <- predict(object = rfsModel, na.omit(test))
+
+# Predicted values (probabilities)
+ypredProbRFS <- predict(object = rfsModel, na.omit(test), type="prob")
+
+# Prediction objects
 predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_tallest"])
+
+timing_results$rfs_testing <- get_timing(Sys.time(), init_time)
 
 
 # Save and delete the models
@@ -194,5 +224,6 @@ plotModel(
   ytest       = na.omit(test)[["w_is_tallest"]]
 )
 
-timing_results$end_time <- get_timing(Sys.time(), init_time)
 write_results(results = timing_results, path = path, data_source = "LoadTrainingAndTesting")
+
+timing_results$reporting <- get_timing(Sys.time(), init_time)

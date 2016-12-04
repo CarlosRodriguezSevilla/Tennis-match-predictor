@@ -68,7 +68,7 @@ echo -e "[$(date +%H:%M)]" "\t* Load, Training and Testing"
 
 
 echo -e "[$(date +%H:%M)]" "\t* Visual analysis reports"
-# R CMD BATCH ../src/LoadTrainingAndTesting.R ../out/LoadTrainingAndTesting.Rout
+# R CMD BATCH ../src/Analysis.R ../out/Analysis/Analysis.Rout
 ( 
   if R CMD BATCH "${args}" ../src/Analysis.R ../out/Analysis/Analysis.Rout ; then 
     echo -e "[$(date +%H:%M)]" "\t\t- Visual analysis reports done"
