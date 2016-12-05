@@ -54,7 +54,7 @@ ggplot(data = mean_data_ltt,
 dev.off()
 
 
-png(filename = "out/r_csv.png")
+png(filename = "out/r_csv.png", width = 800)
 par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = r_csv, FUN = mean), 
         main = "R",
@@ -66,7 +66,7 @@ barplot(height = sapply(X = r_csv, FUN = mean),
 par(mar = default_mar)
 dev.off()
 
-png(filename = "out/mongodb_csv.png")
+png(filename = "out/mongodb_csv.png", width = 800)
 par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = mongodb_csv, FUN = mean), 
         main = "MongoDB",
@@ -78,7 +78,7 @@ barplot(height = sapply(X = mongodb_csv, FUN = mean),
 par(mar = default_mar)
 dev.off()
 
-png(filename = "out/postgresql_csv.png")
+png(filename = "out/postgresql_csv.png", width = 800)
 par(mar = default_mar + c(4,0,0,0))
 barplot(height = sapply(X = postgresql_csv, FUN = mean), 
         main = "PostgreSQL",
