@@ -23,9 +23,9 @@ timing_results$load_libraries <- get_timing(Sys.time(), init_time)
 # EXTRACTION
 
 # Load every filename of datasets
-filenames <- list.files("dat", 
-                        pattern="atp_matches_[0-9]{4}", 
-                        full.names=TRUE
+filenames <- list.files(path       = "dat",
+                        pattern    = "atp_matches_[0-9]{4}", 
+                        full.names = TRUE
 )
 
 pw <- { "tennispredictor"}
