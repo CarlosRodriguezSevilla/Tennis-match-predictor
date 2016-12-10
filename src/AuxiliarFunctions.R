@@ -44,6 +44,10 @@ write_results <- function(results, path, data_source){
 
 plotModel <- function(name, data_source, prediction, ypred, ypredProb, ytest){
   
+  hues <- seq(15, 375, length = 4)
+  cols <- hcl(h = hues, l = 65, c = 100)[1:3]
+  cols[length(cols)+1] <- "#ff3333"
+  
   # Create the results folder if it does not already exists
   dir.create(paste0('out/', data_source), showWarnings = F)
   
@@ -96,16 +100,17 @@ plotModel <- function(name, data_source, prediction, ypred, ypredProb, ytest){
   DFPlot <- t(DFPlot)
   colnames(DFPlot) <- seq(0.05,1,by = 0.05)
   barplot(DFPlot, 
-          col= c("#33ff66","#ff3333"), 
+          col= c(cols[2],cols[4]), 
           main = "Real value == 1", 
           xlab = "Predicted probability",
-          ylab = "Number of observations"
+          ylab = "Number of observations",
+          border = NA
   )
   legend("topright", 
          inset = c(0, 0), 
          legend = rownames(DFPlot), 
          cex = 1.5, 
-         fill=c("#33ff66","#ff3333")
+         fill=c(cols[2],cols[4])
   )
   
   
@@ -122,16 +127,17 @@ plotModel <- function(name, data_source, prediction, ypred, ypredProb, ytest){
   DFPlot <- t(DFPlot)
   colnames(DFPlot) <- seq(0.05,1,by = 0.05)
   barplot(DFPlot,
-          col= c("#ff3333","#33ff66"), 
+          col= c(cols[4],cols[2]), 
           main = "Real value == 0", 
           xlab = "Predicted probability",
-          ylab = "Number of observations"
+          ylab = "Number of observations",
+          border = NA
   )
   legend("topright", 
          inset = c(0, 0), 
          legend = rownames(DFPlot), 
          cex = 1.5, 
-         fill=c("#ff3333","#33ff66")
+         fill=c(cols[4],cols[2])
   )
   
   
@@ -161,18 +167,19 @@ plotModel <- function(name, data_source, prediction, ypred, ypredProb, ytest){
   DFPlot <- t(DFPlot)
   colnames(DFPlot) <- seq(0.05,1,by = 0.05)
   bp <- barplot(DFPlot, 
-                col= c("#33ff66","#ff3333"), 
+                col= c(cols[2],cols[4]), 
                 main = "Hits vs Mistakes (Percentage)", 
                 xlab = "Predicted probability",
                 ylab = "Percentage",
-                ylim = c(0,1.1)
+                ylim = c(0,1.1),
+                border = NA
   )
   text(x = bp, y = 1.02, label=Occurrences, pos = 3, las=2)
   # legend("bottomright", 
   #        inset = c(0.07, 0.25), 
   #        legend = rownames(DFPlot), 
   #        cex = 2, 
-  #        fill=c("#33ff66","#ff3333")
+  #        fill=c(cols[2],cols[4])
   #        )
   
   dev.off()
