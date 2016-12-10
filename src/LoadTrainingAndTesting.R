@@ -216,7 +216,7 @@ plotModel(
 )
 
 plotModel(
-  name        = "Random Forest", 
+  name        = "RandomForest", 
   data_source = data_source,
   prediction  = predRFS,
   ypred       = ypredRFS, 
