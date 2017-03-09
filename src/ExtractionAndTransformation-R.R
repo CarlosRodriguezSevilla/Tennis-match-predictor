@@ -2,10 +2,12 @@
 rm(list=ls()) # Clear workspace
 args=(commandArgs(trailingOnly = TRUE))
 
-if(length(args)>0){
-  for(i in 1:length(args)){
-    eval(parse(text=args[[i]]))
-  } 
+if(!interactive()){
+  if(length(args)>0){
+    for(i in 1:length(args)){
+      eval(parse(text=args[[i]]))
+    } 
+  }
 }
 
 setwd(path)
@@ -35,6 +37,7 @@ cl1      <- makeCluster(no_cores)
 registerDoSNOW(cl1)
 
 matches <- foreach(i=1:length(filenames), .combine = rbind) %dopar% {
+  
   dataset <- read.csv(filenames[i])
   
   # Was the winner the tallest player? (response variable)
@@ -47,7 +50,7 @@ matches <- foreach(i=1:length(filenames), .combine = rbind) %dopar% {
   }
   
   return(dataset)
-
+  
 }
 stopCluster(cl1)
 rm(filenames, no_cores, cl1)

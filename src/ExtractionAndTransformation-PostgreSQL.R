@@ -2,10 +2,12 @@
 rm(list=ls()) # Clear workspace
 args=(commandArgs(trailingOnly = TRUE))
 
-if(length(args)>0){
-  for(i in 1:length(args)){
-    eval(parse(text=args[[i]]))
-  } 
+if(!interactive()){
+  if(length(args)>0){
+    for(i in 1:length(args)){
+      eval(parse(text=args[[i]]))
+    } 
+  }
 }
 
 setwd(path)
