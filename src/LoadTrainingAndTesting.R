@@ -80,7 +80,7 @@ switch(data_source,
          matches <- dbGetQuery(con, "SELECT * from matches_clean")
          
          # Close the connection
-         dbDisconnect(con)
+         lapply(X = dbListConnections(drv = drv), FUN = dbDisconnect)
          dbUnloadDriver(drv)
          
          message("Dataset is loaded from PostgreSQL")

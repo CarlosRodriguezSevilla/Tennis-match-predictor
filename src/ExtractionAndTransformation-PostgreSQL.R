@@ -218,7 +218,7 @@ dbWriteTable(
 rm(matches)
 
 # Close the connection
-dbDisconnect(con)
+lapply(X = dbListConnections(drv = drv), FUN = dbDisconnect)
 dbUnloadDriver(drv)
 
 
