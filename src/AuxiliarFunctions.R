@@ -10,7 +10,7 @@ write_results <- function(results, path, data_source){
   aux     <- results
   
   if(ncol(results) > 2){
-    for(col in 2:ncol(results)){
+    for(col in 3:ncol(results)){
       aux[,col] <- results[,col] - results[,(col-1)]
     } 
     results <- aux
