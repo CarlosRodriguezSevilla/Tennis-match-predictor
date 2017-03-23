@@ -40,15 +40,6 @@ matches <- foreach(i=1:length(filenames), .combine = rbind) %dopar% {
   
   dataset <- read.csv(filenames[i])
   
-  # Was the winner the tallest player? (response variable)
-  dataset$w_is_tallest <- dataset$winner_ht > dataset$loser_ht
-  dataset$w_is_tallest <- as.factor(dataset$w_is_tallest)
-  
-  # Remove the rows where the response variable is NA.
-  if(length(which(is.na(dataset$w_is_tallest)))>0){
-    dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
-  }
-  
   return(dataset)
   
 }
@@ -68,6 +59,9 @@ matches$tourney_month <- as.numeric(format(matches$tourney_date,'%m'))
 # Were they left as factors, troubles would arise due to new levels
 matches$winner_name <- as.character(matches$winner_name)
 matches$loser_name <- as.character(matches$loser_name)
+
+# Set response variable
+matches$w_is_fp <- T
 
 # Replicate every single row swapping winner columns for loser columns. 
 # Rename column names
@@ -92,6 +86,7 @@ for (name_first in colnames(winner_cols)){
   matchesInverted[,name_second] <- winner_cols[,name_first]
 }
 
+matchesInverted$w_is_fp <- F
 rm(loser_cols, winner_cols, name_first, name_second)
 
 # Intersect the rows of the previous dataset with the ones of the swapped one.
@@ -120,7 +115,7 @@ matches <- matches[c(
   "first_player_seed",     "first_player_entry",         "first_player_hand",       "first_player_ht",
   "first_player_age",      "first_player_rank_points",   "second_player_seed",      "second_player_entry",
   "second_player_hand",    "second_player_ht",           "second_player_age",       "second_player_rank_points",  
-  "best_of",               "round",                      "draw_size",               "w_is_tallest"
+  "best_of",               "round",                      "draw_size",               "w_is_fp"
 )]
 
 timing_results$transformation <- get_timing(Sys.time(), init_time)

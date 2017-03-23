@@ -57,10 +57,10 @@ sql_command <- "CREATE TABLE matches_raw
   tourney_id varchar(12),         tourney_name varchar(50),         surface varchar(10),
   draw_size smallint,             tourney_level varchar(2),         tourney_date date,
   match_num smallint,             winner_id integer,                winner_seed smallint,
-  winner_entry varchar(2),        winner_name varchar(30),          winner_hand varchar(2),
+  winner_entry varchar(2),        winner_name varchar(35),          winner_hand varchar(2),
   winner_ht smallint,             winner_ioc char(3),               winner_age numeric(4,2),
   winner_rank smallint,           winner_rank_points smallint,      loser_id integer,
-  loser_seed smallint,            loser_entry varchar(2),           loser_name varchar(30),
+  loser_seed smallint,            loser_entry varchar(2),           loser_name varchar(35),
   loser_hand varchar(2),          loser_ht smallint,                loser_ioc char(3),
   loser_age numeric(4,2),         loser_rank smallint,              loser_rank_points smallint,
   score varchar(50),              best_of smallint,                 round varchar(4),
@@ -70,7 +70,7 @@ sql_command <- "CREATE TABLE matches_raw
   w_bpFaced smallint,             l_ace smallint,                   l_df smallint,   
   l_svpt smallint,                l_1stIn smallint,                 l_1stWon smallint,
   l_2ndWon smallint,              l_SvGms smallint,                 l_bpSaved smallint,
-  l_bpFaced smallint,             w_is_tallest boolean
+  l_bpFaced smallint
 )
 
 WITH (
@@ -88,15 +88,6 @@ rm(sql_command)
 for (i in 1:length(filenames)){
   
   dataset <- read.csv(filenames[i])
-  
-  # Was the winner the tallest player? (response variable)
-  dataset$w_is_tallest <- dataset$winner_ht > dataset$loser_ht
-  dataset$w_is_tallest <- as.factor(dataset$w_is_tallest)
-  
-  # Remove the rows where the response variable is NA.
-  if(length(which(is.na(dataset$w_is_tallest)))>0){
-    dataset <- dataset[-which(is.na(dataset$w_is_tallest)),]
-  }
   
   # Insert raw data
   dbWriteTable(
@@ -125,6 +116,9 @@ matches$tourney_month <- as.numeric(format(matches$tourney_date,'%m'))
 # matches$winner_name <- as.character(matches$winner_name)
 # matches$loser_name <- as.character(matches$loser_name)
 
+# Set response variable
+matches$w_is_fp <- T
+
 # Replicate every single row swapping winner columns for loser columns. 
 # Rename column names
 colnames(matches) <- gsub("winner", "first_player", colnames(matches))
@@ -148,6 +142,7 @@ for (name_first in colnames(winner_cols)){
   matchesInverted[,name_second] <- winner_cols[,name_first]
 }
 
+matchesInverted$w_is_fp <- F
 rm(loser_cols, winner_cols, name_first, name_second)
 
 # Intersect the rows of the previous dataset with the ones of the swapped one.
@@ -176,7 +171,7 @@ matches <- matches[c(
   "first_player_seed",     "first_player_entry",         "first_player_hand",       "first_player_ht",
   "first_player_age",      "first_player_rank_points",   "second_player_seed",      "second_player_entry",
   "second_player_hand",    "second_player_ht",           "second_player_age",       "second_player_rank_points",  
-  "best_of",               "round",                      "draw_size",               "w_is_tallest"
+  "best_of",               "round",                      "draw_size",               "w_is_fp"
 )]
 
 timing_results$transformation <- get_timing(Sys.time(), init_time)
@@ -194,7 +189,7 @@ first_player_hand varchar(2),       first_player_ht smallint,       first_player
 first_player_rank_points smallint,  second_player_seed smallint,    second_player_entry varchar(2),
 second_player_hand varchar(2),      second_player_ht smallint,      second_player_age numeric(4,2),       
 second_player_rank_points smallint, best_of smallint,               round varchar(4),                      
-draw_size smallint,                 w_is_tallest boolean
+draw_size smallint,                 w_is_fp boolean
 )
 
 WITH (

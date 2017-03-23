@@ -2,10 +2,14 @@
 rm(list=ls()) # Clear workspace
 args=(commandArgs(trailingOnly = TRUE))
 
-if(length(args)>0){
-  for(i in 1:length(args)){
-    eval(parse(text=args[[i]]))
-  } 
+if(!interactive()){
+  if(length(args)>0){
+    for(i in 1:length(args)){
+      eval(parse(text=args[[i]]))
+    } 
+  }
+} else{
+  data_source <- sample(x = c("R", "MongoDB", "PostgreSQL"), size = 1)
 }
 
 setwd(path)
@@ -100,7 +104,7 @@ timing_results$extraction_done <- get_timing(Sys.time(), init_time)
 
 # Convert to factor where needed
 to_factors <- c("surface", "draw_size", "tourney_level", "best_of", 
-                "round", "w_is_tallest", "first_player_entry", 
+                "round", "w_is_fp", "first_player_entry", 
                 "second_player_entry", "first_player_hand", 
                 "second_player_hand", "first_player_seed", 
                 "second_player_seed")
@@ -127,7 +131,7 @@ timing_results$sampling <- get_timing(Sys.time(), init_time)
 
 # TRAINING
 
-svmModel <- ksvm(w_is_tallest~.,
+svmModel <- ksvm(w_is_fp~.,
                  data=train,
                  type="C-svc",
                  # Classifier
@@ -138,13 +142,13 @@ svmModel <- ksvm(w_is_tallest~.,
 
 timing_results$svm_training <- get_timing(Sys.time(), init_time)
 
-adaModel <- ada(w_is_tallest~.,
+adaModel <- ada(w_is_fp~.,
                 data=train,
                 type="real")
 
 timing_results$ada_training <- get_timing(Sys.time(), init_time)
 
-rfsModel <- randomForest(w_is_tallest~.,
+rfsModel <- randomForest(w_is_fp~.,
                          data=train,
                          na.action=na.omit)
 
@@ -160,7 +164,7 @@ ypredSVM <- predict(object = svmModel, test)
 ypredProbSVM <- predict(object = svmModel, na.omit(test), type="prob")
 
 # Prediction objects
-predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_tallest"])
+predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_fp"])
 
 timing_results$svm_testing <- get_timing(Sys.time(), init_time)
 
@@ -173,7 +177,7 @@ ypredADA <- predict(object = adaModel, na.omit(test))
 ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
 
 # Prediction objects
-predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_tallest"])
+predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_fp"])
 
 timing_results$ada_testing <- get_timing(Sys.time(), init_time)
 
@@ -186,7 +190,7 @@ ypredRFS <- predict(object = rfsModel, na.omit(test))
 ypredProbRFS <- predict(object = rfsModel, na.omit(test), type="prob")
 
 # Prediction objects
-predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_tallest"])
+predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_fp"])
 
 timing_results$rfs_testing <- get_timing(Sys.time(), init_time)
 
@@ -203,7 +207,7 @@ plotModel(
   prediction  = predSVM,
   ypred       = ypredSVM, 
   ypredProb   = ypredProbSVM, 
-  ytest       = na.omit(test)[["w_is_tallest"]]
+  ytest       = na.omit(test)[["w_is_fp"]]
 )
 
 plotModel(
@@ -212,7 +216,7 @@ plotModel(
   prediction  = predADA,
   ypred       = ypredADA, 
   ypredProb   = ypredProbADA, 
-  ytest       = na.omit(test)[["w_is_tallest"]]
+  ytest       = na.omit(test)[["w_is_fp"]]
 )
 
 plotModel(
@@ -221,7 +225,7 @@ plotModel(
   prediction  = predRFS,
   ypred       = ypredRFS, 
   ypredProb   = ypredProbRFS, 
-  ytest       = na.omit(test)[["w_is_tallest"]]
+  ytest       = na.omit(test)[["w_is_fp"]]
 )
 
 write_results(results = timing_results, path = path, data_source = "LoadTrainingAndTesting")
