@@ -3,7 +3,7 @@
 # On exit silently kill all running subprocesses 
 trap "exec 3>&2; exec 2> /dev/null; pkill -P $$; exec 2>&3" EXIT
 
-if ([ "$#" -eq 2 ] && [ "$1" == "-source" ]); then
+if [[ "$#" -eq 2 ]] && [[ "$1" == "-source" ]]; then
   data_sources=(R PostgreSQL MongoDB)
   data_source=$2
   if ! [[ ${data_sources[*]} =~ (^|[[:space:]])$data_source($|[[:space:]]) ]]; then

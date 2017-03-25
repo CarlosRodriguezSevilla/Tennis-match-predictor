@@ -3,7 +3,7 @@
 # On exit silently kill all running subprocesses 
 trap "exec 3>&2; exec 2> /dev/null; pkill -P $$; exec 2>&3" EXIT
 
-if ([ "$#" -ge 2 ] && [ "$1" == "-source" ]); then
+if ([[ "$#" -ge 2 ]] && [[ "$#" -le 3 ]] && [[ "$1" == "-source" ]]); then
   data_sources=(R PostgreSQL MongoDB)
   data_source=$2
   if ! [[ ${data_sources[*]} =~ (^|[[:space:]])$data_source($|[[:space:]]) ]]; then
@@ -19,7 +19,7 @@ echo "Running Tennis Match Predictor"
 
 echo -e "[$(date +%H:%M)]" "\t* Extraction and Transformation"
 
-if [ "$data_source" == "R" ]  || [ "$data_source" == "" ]; then
+if [[ "$data_source" == "R" ]]  || [[ "$data_source" == "" ]]; then
   # R CMD BATCH ../src/ExtractionAndTransformation-R.R ../out/R/ExtractionAndTransformation-R.Rout
   ( 
     if R CMD BATCH "${args}" ../src/ExtractionAndTransformation-R.R ../out/R/ExtractionAndTransformation-R.Rout ; then
@@ -30,7 +30,7 @@ if [ "$data_source" == "R" ]  || [ "$data_source" == "" ]; then
   ) & 
 fi
 
-if [ "$data_source" == "PostgreSQL" ]  || [ "$data_source" == "" ]; then
+if [[ "$data_source" == "PostgreSQL" ]]  || [[ "$data_source" == "" ]]; then
   # R CMD BATCH ../src/ExtractionAndTransformation-PostgreSQL.R ../out/R/ExtractionAndTransformation-PostgreSQL.Rout
   ( 
     if R CMD BATCH "${args}" ../src/ExtractionAndTransformation-PostgreSQL.R ../out/PostgreSQL/ExtractionAndTransformation-PostgreSQL.Rout ; then 
@@ -41,7 +41,7 @@ if [ "$data_source" == "PostgreSQL" ]  || [ "$data_source" == "" ]; then
   ) & 
 fi  
 
-if [ "$data_source" == "MongoDB" ]  || [ "$data_source" == "" ]; then
+if [[ "$data_source" == "MongoDB" ]]  || [[ "$data_source" == "" ]]; then
   # R CMD BATCH ../src/ExtractionAndTransformation-MongoDB.R ../out/R/ExtractionAndTransformation-MongoDB.Rout
   ( 
     if R CMD BATCH "${args}" ../src/ExtractionAndTransformation-MongoDB.R ../out/MongoDB/ExtractionAndTransformation-MongoDB.Rout ; then 
