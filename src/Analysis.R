@@ -52,7 +52,7 @@ mean_data_l$data_source <- factor(
   levels = sort(unique(as.character(mean_data_l$data_source)), dec=T))
 ggplot(data = mean_data_l, 
        aes(x = interval, y = value, fill = data_source)) + 
-  geom_bar(stat="identity",position="dodge")+
+  stat_summary(fun.y="mean", position=position_dodge(), geom="bar") + 
   xlab(NULL)+ylab("Seconds")
 dev.off()
 
@@ -127,6 +127,6 @@ mean_data_et$data_source <- factor(
 
 png(filename = "out/mean_data_et.png", width = 800)
 ggplot(mean_data_et, aes(x = Mark_time, y = value, fill = data_source)) + 
-  geom_bar(stat="identity",position="dodge")+
+  stat_summary(fun.y="mean", position=position_dodge(), geom="bar") + 
   xlab(NULL)+ylab("Seconds")
 dev.off()
