@@ -22,24 +22,15 @@ write_results <- function(results, path, data_source){
     yes  = paste("ExtractionAndTransformation-", data_source, ".csv", sep=""), 
     no   = paste(data_source, ".csv", sep=""))
   dest_file   <- paste(dest_folder, dest_file,   sep="/")
-  if(!file.exists(dest_file)){ # The file does not exist yet
-    write.table(x = results, 
-                file = dest_file,
-                row.names=F, 
-                na="NA", 
-                quote= FALSE, 
-                sep=",", 
-                col.names=T)
-  } else{ # The file already exists
-    write.table(x = results, 
-                file = dest_file, 
-                row.names=F, 
-                na="NA", 
-                append=T, 
-                quote= FALSE, 
-                sep=",", 
-                col.names=F)
-  }
+  
+  write.table(x         = results, 
+              file      = dest_file, 
+              row.names = F, 
+              na        = "NA", 
+              append    = file.exists(dest_file), 
+              quote     = FALSE, 
+              sep       = ",", 
+              col.names = F)
 }
 
 plotModel <- function(name, data_source, prediction, ypred, ypredProb, ytest){
