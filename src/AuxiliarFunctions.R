@@ -30,7 +30,7 @@ write_results <- function(results, path, data_source){
               append    = file.exists(dest_file), 
               quote     = FALSE, 
               sep       = ",", 
-              col.names = file.exists(dest_file))
+              col.names = !file.exists(dest_file))
 }
 
 plotModel <- function(name, data_source, prediction, ypred, ypredProb, ytest){
