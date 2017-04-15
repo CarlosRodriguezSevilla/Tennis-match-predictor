@@ -20,7 +20,7 @@ library(tidyr)
 
 source(file = "src/AuxiliarFunctions.R")
 
-timing_results$load_libraries <- get_timing(Sys.time(), init_time)
+timing_results$carga_bibliotecas <- get_timing(Sys.time(), init_time)
 
 # EXTRACTION
 
@@ -102,7 +102,7 @@ rm(i, filenames, dataset)
 # Fetch all the matches
 matches <- dbGetQuery(con, "SELECT * from matches_raw")
 
-timing_results$extraction <- get_timing(Sys.time(), init_time)
+timing_results$extraccion <- get_timing(Sys.time(), init_time)
 
 # TRANSFORMATION
 
@@ -174,7 +174,7 @@ matches <- matches[c(
   "best_of",               "round",                      "draw_size",               "w_is_fp"
 )]
 
-timing_results$transformation <- get_timing(Sys.time(), init_time)
+timing_results$transformacion <- get_timing(Sys.time(), init_time)
 
 # Delete clean matches table if it already exists
 if ( dbExistsTable(con, "matches_clean") ){
@@ -217,5 +217,5 @@ lapply(X = dbListConnections(drv = drv), FUN = dbDisconnect)
 dbUnloadDriver(drv)
 
 
-timing_results$insertion <- get_timing(Sys.time(), init_time)
+timing_results$insercion <- get_timing(Sys.time(), init_time)
 write_results(results = timing_results, path = path, data_source = "PostgreSQL")

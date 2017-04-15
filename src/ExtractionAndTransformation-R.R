@@ -21,7 +21,7 @@ library(doSNOW)
 
 source(file = "src/AuxiliarFunctions.R")
 
-timing_results$load_libraries <- get_timing(Sys.time(), init_time)
+timing_results$carga_bibliotecas <- get_timing(Sys.time(), init_time)
 
 # EXTRACTION
 
@@ -46,7 +46,7 @@ matches <- foreach(i=1:length(filenames), .combine = rbind) %dopar% {
 stopCluster(cl1)
 rm(filenames, no_cores, cl1)
 
-timing_results$extraction <- get_timing(Sys.time(), init_time)
+timing_results$extraccion <- get_timing(Sys.time(), init_time)
 
 # TRANSFORMATION    
 
@@ -118,11 +118,11 @@ matches <- matches[c(
   "best_of",               "round",                      "draw_size",               "w_is_fp"
 )]
 
-timing_results$transformation <- get_timing(Sys.time(), init_time)
+timing_results$transformacion <- get_timing(Sys.time(), init_time)
 
 save(matches, file="rda/Matches-clean.RData")
 rm(matches)
 
 
-timing_results$insertion <- get_timing(Sys.time(), init_time)
+timing_results$insercion <- get_timing(Sys.time(), init_time)
 write_results(results = timing_results, path = path, data_source = "R")

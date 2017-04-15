@@ -20,7 +20,7 @@ library(tidyr)
 
 source(file = "src/AuxiliarFunctions.R")
 
-timing_results$load_libraries <- get_timing(Sys.time(), init_time)
+timing_results$carga_bibliotecas <- get_timing(Sys.time(), init_time)
 
 # EXTRACTION
 
@@ -60,7 +60,7 @@ matches <- con$find()
 # Close the connection
 rm(con)
 
-timing_results$extraction <- get_timing(Sys.time(), init_time)
+timing_results$extraccion <- get_timing(Sys.time(), init_time)
 
 # TRANSFORMATION
 
@@ -132,7 +132,7 @@ matches <- matches[c(
   "best_of",               "round",                      "draw_size",               "w_is_fp"
 )]
 
-timing_results$transformation <- get_timing(Sys.time(), init_time)
+timing_results$transformacion <- get_timing(Sys.time(), init_time)
 
 # Create connection to the cleaned matches collection
 con <- mongo(
@@ -155,5 +155,5 @@ rm(matches)
 rm(con)
 
 
-timing_results$insertion <- get_timing(Sys.time(), init_time)
+timing_results$insercion <- get_timing(Sys.time(), init_time)
 write_results(results = timing_results, path = path, data_source = "MongoDB")

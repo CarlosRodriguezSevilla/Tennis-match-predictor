@@ -112,21 +112,21 @@ barplot(height = sapply(X = postgresql_csv, FUN = mean),
 par(mar = default_mar)
 dev.off()
 
-mean_data_et <- data.frame(R=sapply(X = r_csv,          FUN = mean))
-mean_data_et$MongoDB    <-   sapply(X = mongodb_csv,    FUN = mean)
-mean_data_et$PostgreSQL <-   sapply(X = postgresql_csv, FUN = mean)
-mean_data_et$Mark_time  <- rownames(mean_data_et)
-rownames(mean_data_et)  <- NULL
+mean_data_etl <- data.frame(R=sapply(X = r_csv,          FUN = mean))
+mean_data_etl$MongoDB    <-   sapply(X = mongodb_csv,    FUN = mean)
+mean_data_etl$PostgreSQL <-   sapply(X = postgresql_csv, FUN = mean)
+mean_data_etl$Mark_time  <- rownames(mean_data_etl)
+rownames(mean_data_etl)  <- NULL
 
-mean_data_et=reshape2::melt(mean_data_et, id.vars="Mark_time", variable.name="data_source")
-mean_data_et$value       <- round( x = mean_data_et$value, 2)
-mean_data_et$Mark_time   <- factor(x = mean_data_et$Mark_time, levels = unique(mean_data_et$Mark_time))
-mean_data_et$data_source <- factor(
-  x = mean_data_et$data_source, 
-  levels = sort(unique(as.character(mean_data_et$data_source)), dec=T))
+mean_data_etl=reshape2::melt(mean_data_etl, id.vars="Mark_time", variable.name="data_source")
+mean_data_etl$value       <- round( x = mean_data_etl$value, 2)
+mean_data_etl$Mark_time   <- factor(x = mean_data_etl$Mark_time, levels = unique(mean_data_etl$Mark_time))
+mean_data_etl$data_source <- factor(
+  x = mean_data_etl$data_source, 
+  levels = sort(unique(as.character(mean_data_etl$data_source)), dec=T))
 
-png(filename = "out/mean_data_et.png", width = 800)
-ggplot(mean_data_et, aes(x = Mark_time, y = value, fill = data_source)) + 
+png(filename = "out/mean_data_etl.png", width = 800)
+ggplot(mean_data_etl, aes(x = Mark_time, y = value, fill = data_source)) + 
   stat_summary(fun.y="mean", position=position_dodge(), geom="bar") + 
   xlab(NULL)+ylab("Seconds")
 dev.off()

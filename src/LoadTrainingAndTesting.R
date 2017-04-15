@@ -33,7 +33,7 @@ library(knitr)
 
 source(file = "src/AuxiliarFunctions.R")
 
-timing_results$load_libraries <- get_timing(Sys.time(), init_time)
+timing_results$carga_bibliotecas <- get_timing(Sys.time(), init_time)
 
 
 # LOAD
@@ -100,7 +100,7 @@ switch(data_source,
                    ". \nNot one of 'PostgreSQL', 'MongoDB' or 'R'."))
 )
 
-timing_results$extraction_done <- get_timing(Sys.time(), init_time)
+timing_results$carga <- get_timing(Sys.time(), init_time)
 
 # Convert to factor where needed
 to_factors <- c("surface", "draw_size", "tourney_level", "best_of", 
@@ -127,7 +127,7 @@ rm(matches)
 
 rm(trainIndex)
 
-timing_results$sampling <- get_timing(Sys.time(), init_time)
+timing_results$muestreo <- get_timing(Sys.time(), init_time)
 
 # TRAINING
 
@@ -140,19 +140,19 @@ svmModel <- ksvm(w_is_fp~.,
                  kpar = "automatic",
                  prob.model = TRUE)
 
-timing_results$svm_training <- get_timing(Sys.time(), init_time)
+timing_results$svm_entrenamiento <- get_timing(Sys.time(), init_time)
 
 adaModel <- ada(w_is_fp~.,
                 data=train,
                 type="real")
 
-timing_results$ada_training <- get_timing(Sys.time(), init_time)
+timing_results$ada_entrenamiento <- get_timing(Sys.time(), init_time)
 
 rfsModel <- randomForest(w_is_fp~.,
                          data=train,
                          na.action=na.omit)
 
-timing_results$rfs_training <- get_timing(Sys.time(), init_time)
+timing_results$rfs_entrenamiento <- get_timing(Sys.time(), init_time)
 
 # TESTING
 
@@ -166,7 +166,7 @@ ypredProbSVM <- predict(object = svmModel, na.omit(test), type="prob")
 # Prediction objects
 predSVM <- prediction(ypredProbSVM[,2], na.omit(test)["w_is_fp"])
 
-timing_results$svm_testing <- get_timing(Sys.time(), init_time)
+timing_results$svm_testeo <- get_timing(Sys.time(), init_time)
 
 
 # Testing ADA
@@ -179,7 +179,7 @@ ypredProbADA <- predict(object = adaModel, na.omit(test), type="prob")
 # Prediction objects
 predADA <- prediction(ypredProbADA[,2], na.omit(test)["w_is_fp"])
 
-timing_results$ada_testing <- get_timing(Sys.time(), init_time)
+timing_results$ada_testeo <- get_timing(Sys.time(), init_time)
 
 
 # Testing RFS
@@ -192,7 +192,7 @@ ypredProbRFS <- predict(object = rfsModel, na.omit(test), type="prob")
 # Prediction objects
 predRFS <- prediction(ypredProbRFS[,2], na.omit(test)["w_is_fp"])
 
-timing_results$rfs_testing <- get_timing(Sys.time(), init_time)
+timing_results$rfs_testeo <- get_timing(Sys.time(), init_time)
 
 
 # Save and delete the models
