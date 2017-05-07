@@ -105,26 +105,32 @@ mongodb_csv    <- reshape2::melt(data = mongodb_csv,    id.vars = NULL)
 postgresql_csv <- reshape2::melt(data = postgresql_csv, id.vars = NULL)
 
 png(filename = "out/r_csv.png", width = 800)
-ggplot(data = r_csv, aes(x = variable, y = value)) + 
+ggplot(data = r_csv, aes(x = variable, y = value))                                   + 
   stat_summary(fun.y="mean", position=position_dodge(), geom="bar",  fill = cols[1]) + 
-  scale_y_continuous(limits = ylim_group) + 
-  xlab(NULL) + ylab("Segundos") +
-  theme_minimal(base_size = 20)
+  theme_minimal(base_size = 20)                                                      + 
+  scale_y_continuous(limits = ylim_group)                                            + 
+  xlab(NULL) + ylab("Segundos")                                                      +
+  theme(plot.title = element_text(hjust = 0.5))                                      + 
+  ggtitle("R")
 dev.off()
 
 png(filename = "out/mongodb_csv.png", width = 800)
 ggplot(data = mongodb_csv, aes(x = variable, y = value)) + 
   stat_summary(fun.y="mean", position=position_dodge(), geom="bar",  fill = cols[3]) + 
-  scale_y_continuous(limits = ylim_group) + 
-  xlab(NULL) + ylab("Segundos") +
-  theme_minimal(base_size = 20)
+  theme_minimal(base_size = 20)                                                      + 
+  scale_y_continuous(limits = ylim_group)                                            + 
+  xlab(NULL) + ylab("Segundos")                                                      +
+  theme(plot.title = element_text(hjust = 0.5))                                      +
+  ggtitle("MongoDB")
 dev.off()
 
 png(filename = "out/postgresql_csv.png", width = 800)
 ggplot(data = postgresql_csv, aes(x = variable, y = value)) + 
   stat_summary(fun.y="mean", position=position_dodge(), geom="bar",  fill = cols[2]) + 
-  scale_y_continuous(limits = ylim_group) + 
-  xlab(NULL) + ylab("Segundos") +
-  theme_minimal(base_size = 20)
+  theme_minimal(base_size = 20)                                                      + 
+  scale_y_continuous(limits = ylim_group)                                            + 
+  xlab(NULL) + ylab("Segundos")                                                      +
+  theme(plot.title = element_text(hjust = 0.5))                                      +
+  ggtitle("PostgreSQL")
 dev.off()
 
