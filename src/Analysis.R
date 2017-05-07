@@ -11,6 +11,7 @@ if(length(args)>0){
 setwd(path)
 
 library(ggplot2)
+library(ggthemes)
 library(reshape2)
 
 # Read data
@@ -53,7 +54,8 @@ mean_data_l$data_source <- factor(
 ggplot(data = mean_data_l, 
        aes(x = interval, y = value, fill = data_source)) + 
   stat_summary(fun.y="mean", position=position_dodge(), geom="bar") + 
-  xlab(NULL)+ylab("Seconds")
+  xlab(NULL)+ylab("Segundos") + 
+  theme_minimal(base_size = 20)
 dev.off()
 
 png(filename = "out/mean_data_tt.png", width=800)
@@ -68,49 +70,10 @@ mean_data_tt$data_source <- factor(
 ggplot(data = mean_data_tt, 
        aes(x = interval, y = value, fill = data_source)) + 
   stat_summary(fun.y="mean", position=position_dodge(), geom="bar") + 
-  xlab(NULL)+ylab("Seconds")
+  xlab(NULL) + ylab("Segundos") +
+  theme_minimal(base_size = 14.5)
 dev.off()
 
-
-ylim_group <- c(0, max(c(apply(X = r_csv,          FUN = mean, MARGIN = 2), 
-                         apply(X = mongodb_csv,    FUN = mean, MARGIN = 2), 
-                         apply(X = postgresql_csv, FUN = mean, MARGIN = 2))))
-
-png(filename = "out/r_csv.png", width = 800)
-par(mar = default_mar + c(4,0,0,0))
-barplot(height = sapply(X = r_csv, FUN = mean), 
-        main = "R",
-        ylab = "seconds",
-        ylim = ylim_group,
-        col = cols[1],
-        las    = 2,
-        border = NA)
-par(mar = default_mar)
-dev.off()
-
-png(filename = "out/mongodb_csv.png", width = 800)
-par(mar = default_mar + c(4,0,0,0))
-barplot(height = sapply(X = mongodb_csv, FUN = mean), 
-        main = "MongoDB",
-        ylab = "seconds",
-        ylim = ylim_group,
-        col = cols[3],
-        las    = 2,
-        border = NA)
-par(mar = default_mar)
-dev.off()
-
-png(filename = "out/postgresql_csv.png", width = 800)
-par(mar = default_mar + c(4,0,0,0))
-barplot(height = sapply(X = postgresql_csv, FUN = mean), 
-        main = "PostgreSQL",
-        ylab = "seconds",
-        ylim = ylim_group,
-        col = cols[2],
-        las    = 2,
-        border = NA)
-par(mar = default_mar)
-dev.off()
 
 mean_data_etl <- data.frame(R=sapply(X = r_csv,          FUN = mean))
 mean_data_etl$MongoDB    <-   sapply(X = mongodb_csv,    FUN = mean)
@@ -128,5 +91,40 @@ mean_data_etl$data_source <- factor(
 png(filename = "out/mean_data_etl.png", width = 800)
 ggplot(mean_data_etl, aes(x = Mark_time, y = value, fill = data_source)) + 
   stat_summary(fun.y="mean", position=position_dodge(), geom="bar") + 
-  xlab(NULL)+ylab("Seconds")
+  xlab(NULL) + ylab("Segundos") +
+  theme_minimal(base_size = 20)
 dev.off()
+
+
+ylim_group <- c(0, max(c(apply(X = r_csv,          FUN = max, MARGIN = 2), 
+                         apply(X = mongodb_csv,    FUN = max, MARGIN = 2), 
+                         apply(X = postgresql_csv, FUN = max, MARGIN = 2))))
+
+r_csv          <- reshape2::melt(data = r_csv,          id.vars = NULL)
+mongodb_csv    <- reshape2::melt(data = mongodb_csv,    id.vars = NULL)
+postgresql_csv <- reshape2::melt(data = postgresql_csv, id.vars = NULL)
+
+png(filename = "out/r_csv.png", width = 800)
+ggplot(data = r_csv, aes(x = variable, y = value)) + 
+  stat_summary(fun.y="mean", position=position_dodge(), geom="bar",  fill = cols[1]) + 
+  scale_y_continuous(limits = ylim_group) + 
+  xlab(NULL) + ylab("Segundos") +
+  theme_minimal(base_size = 20)
+dev.off()
+
+png(filename = "out/mongodb_csv.png", width = 800)
+ggplot(data = mongodb_csv, aes(x = variable, y = value)) + 
+  stat_summary(fun.y="mean", position=position_dodge(), geom="bar",  fill = cols[3]) + 
+  scale_y_continuous(limits = ylim_group) + 
+  xlab(NULL) + ylab("Segundos") +
+  theme_minimal(base_size = 20)
+dev.off()
+
+png(filename = "out/postgresql_csv.png", width = 800)
+ggplot(data = postgresql_csv, aes(x = variable, y = value)) + 
+  stat_summary(fun.y="mean", position=position_dodge(), geom="bar",  fill = cols[2]) + 
+  scale_y_continuous(limits = ylim_group) + 
+  xlab(NULL) + ylab("Segundos") +
+  theme_minimal(base_size = 20)
+dev.off()
+
