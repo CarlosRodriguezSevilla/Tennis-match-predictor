@@ -120,7 +120,7 @@ matches <- matches[c(
 
 timing_results$transformacion <- get_timing(Sys.time(), init_time)
 
-save(matches, file="rda/Matches-clean.RData")
+saveRDS(matches, file="rda/Matches-clean.rds")
 rm(matches)
 
 

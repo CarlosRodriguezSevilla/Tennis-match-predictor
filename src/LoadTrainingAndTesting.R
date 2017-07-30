@@ -92,7 +92,7 @@ switch(data_source,
        },
        
        "R"={
-         load(file = "rda/Matches-clean.RData")
+         matches <- readRDS(file = "rda/Matches-clean.rds")
          message("Dataset is loaded from RData")
        },
        
