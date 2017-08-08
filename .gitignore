@@ -21,6 +21,9 @@ Rplots.pdf
 # RData files
 *.RData
 
+# RDS files
+*.rds
+
 # Rproj files
 *.Rproj
 
